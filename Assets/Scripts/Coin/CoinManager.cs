@@ -8,10 +8,12 @@ public class CoinManager : MonoBehaviour
     LineRenderer lineRenderer;
     [SerializeField] List<Coin> coins;
     public Coin selectedCoin;
+    public Vector2 moveTargetPos;
 
     void OnEnable()
     {
         EventManager.OnUnselectedCoins += DrawLineBetweenUnselectedCoins;
+        EventManager.OnThrow += ThrowTheSelectedCoin;
     }
     void Awake()
     {
@@ -34,6 +36,7 @@ public class CoinManager : MonoBehaviour
     void DrawLineBetweenUnselectedCoins()
     {
         int indx = 0;
+        lineRenderer.material = lineRenderer.materials[0];
         foreach (var coin in coins)
         {
             if(selectedCoin != coin)
@@ -44,9 +47,17 @@ public class CoinManager : MonoBehaviour
         }
     }
 
+    void ThrowTheSelectedCoin()
+    {
+        if(selectedCoin != null)
+            selectedCoin.MoveTo(moveTargetPos);
+    }
+
+    
     void OnDisable()
     {
         EventManager.OnUnselectedCoins -= DrawLineBetweenUnselectedCoins;
+        EventManager.OnThrow += ThrowTheSelectedCoin;
     }
 }
 
