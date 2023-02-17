@@ -20,15 +20,16 @@ public class Coin : MonoBehaviour
         myBody = GetComponent<Rigidbody>();    
     }
 
-    public void MoveTo(Vector3 dir)
+    public void MoveTo(Vector2 dir)
     {
-        myBody.AddForce(dir * _moveSpeed * Time.deltaTime,ForceMode.Impulse);
+        Vector3 movePos = new Vector3(dir.x,transform.position.y,dir.y);
+        myBody.AddForce(-movePos * _moveSpeed ,ForceMode.Impulse);
     }
 
     void CoinScaleUp()
     {
         if(CoinManager.Instance.selectedCoin == this)
-            transform.localScale = new Vector3(2,0.1f,2);
+            transform.localScale = new Vector3(1.5f,0.1f,1.5f);
     }
     
     void CoinNormalScale()
