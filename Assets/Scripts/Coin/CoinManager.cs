@@ -18,7 +18,7 @@ public class CoinManager : MonoBehaviour
     {
         EventManager.OnUnselectedCoins += DrawLineBetweenUnselectedCoins;
         EventManager.onCoinSelect += ShowLineRenderer;
-        EventManager.OnPrepareToThrow += CalculateThePowerMeter;
+        EventManager.OnPrepareToThrow += CalculateThePowerMultiplier;
         EventManager.OnThrow += DisappearLineRenderer;
         EventManager.OnThrow += ThrowTheSelectedCoin;
     }
@@ -54,7 +54,7 @@ public class CoinManager : MonoBehaviour
         }
     }
     
-    void CalculateThePowerMeter()
+    void CalculateThePowerMultiplier()
     {
         powerMultiplier = moveTargetPos.magnitude / maxPowerVector.magnitude;
         maxPowerVector = new Vector2(200,200);
@@ -71,10 +71,6 @@ public class CoinManager : MonoBehaviour
             selectedCoin.MoveTo(moveTargetPos.normalized);
     }
 
-    public void CalculateTheThrowVector(Vector2 first,Vector2 last)
-    {
-        moveTargetPos = first - last;
-    }
     void ShowLineRenderer()
     {
         _lr.enabled =true;
@@ -89,7 +85,7 @@ public class CoinManager : MonoBehaviour
     {
         EventManager.OnUnselectedCoins -= DrawLineBetweenUnselectedCoins;
         EventManager.onCoinSelect -= ShowLineRenderer;
-        EventManager.OnPrepareToThrow -= CalculateThePowerMeter;
+        EventManager.OnPrepareToThrow -= CalculateThePowerMultiplier;
         EventManager.OnThrow -= ThrowTheSelectedCoin;
         EventManager.OnThrow -= DisappearLineRenderer;
     }

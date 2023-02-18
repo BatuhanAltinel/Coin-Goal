@@ -6,7 +6,7 @@ public class PlayerInput : MonoBehaviour
 {
     Touch _touch;
     bool isMoved = false;
-    Vector2 firstFingerPos = Vector3.zero;
+    Vector2 firstFingerPos = Vector2.zero;
     Vector2 lastFingerPos = Vector2.zero;
 
     void Update()
@@ -40,9 +40,6 @@ public class PlayerInput : MonoBehaviour
             {
                 lastFingerPos = _touch.position;
                 Vector2 targetPos = lastFingerPos - firstFingerPos;
-
-                // Debug.Log("FirstFinher position : "+firstFingerPos);
-                // Debug.Log("Last finger position : "+lastFingerPos);
 
                 CoinManager.Instance.moveTargetPos = targetPos;
                 EventManager.OnPrepareToThrow.Invoke();
