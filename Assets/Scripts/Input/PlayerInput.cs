@@ -6,8 +6,9 @@ public class PlayerInput : MonoBehaviour
 {
     Touch _touch;
     Coin previousCoin;
-    Vector2 targetPos;
     bool isMoved = false;
+    Vector2 firstFingerPos = Vector3.zero;
+    Vector2 lastFingerPos = Vector2.zero;
 
     void Update()
     {
@@ -16,8 +17,7 @@ public class PlayerInput : MonoBehaviour
 
     void Inputs()
     {
-        Vector2 firstFingerPos = Vector3.zero;
-        Vector2 lastFingerPos = Vector2.zero;
+        
 
         if(Input.touchCount > 0)
         {
@@ -43,20 +43,18 @@ public class PlayerInput : MonoBehaviour
             }
             if(_touch.phase == TouchPhase.Moved && previousCoin != null)
             {
-                lastFingerPos = _touch.deltaPosition;
-                targetPos = _touch.deltaPosition - _touch.position;
+                lastFingerPos = _touch.position;
+                Vector2 targetPos = lastFingerPos - firstFingerPos;
 
                 Debug.Log("FirstFinher position : "+firstFingerPos);
-                // Debug.DrawRay(firstFingerPos,lastFingerPos,Color.grey,2f);
                 Debug.Log("Last finger position : "+lastFingerPos);
 
                 CoinManager.Instance.moveTargetPos = targetPos;
                 EventManager.OnPrepareToThrow.Invoke();
-
-                // EventManager.OnUnselectedCoins.Invoke();
+                
                 if(targetPos.magnitude > 0)
                     isMoved = true;
-                Debug.Log("target vector : "+targetPos);
+                Debug.Log("target vector : "+targetPos.normalized);
                 
             }
             if(_touch.phase == TouchPhase.Ended)
