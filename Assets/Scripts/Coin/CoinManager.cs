@@ -5,24 +5,22 @@ using UnityEngine;
 public class CoinManager : MonoBehaviour
 {
     public static CoinManager Instance;
-    LineRenderer lineRenderer;
+    LineRenderer _lr;
+    float powerMultiplier = 0;
+    public float PowerMultiplier { get{return powerMultiplier;} set{powerMultiplier = value;} }
     [SerializeField] List<Coin> coins;
     public Coin selectedCoin;
-    public GameObject _arrow;
     public Vector2 moveTargetPos;
-    public Vector2 maxPowerVector;
+    [SerializeField] Vector2 maxPowerVector;
     
 
     void OnEnable()
     {
         EventManager.OnUnselectedCoins += DrawLineBetweenUnselectedCoins;
-        EventManager.onCoinSelect += DisplayArrow;
         EventManager.onCoinSelect += ShowLineRenderer;
-        EventManager.onCoinSelect += ArrowPositioning;
-        EventManager.OnPrepareToThrow += ArrowRotation;
+        EventManager.OnPrepareToThrow += CalculateThePowerMultiplier;
         EventManager.OnThrow += DisappearLineRenderer;
         EventManager.OnThrow += ThrowTheSelectedCoin;
-        EventManager.OnThrow += DisappearArrow;
     }
     void Awake()
     {
@@ -33,8 +31,8 @@ public class CoinManager : MonoBehaviour
     }
     void Start()
     {
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = coins.Count-1;
+        _lr = GetComponent<LineRenderer>();
+        _lr.positionCount = coins.Count-1;
     }
 
     public void SetTheCoinSelected(Coin coin)
@@ -45,64 +43,51 @@ public class CoinManager : MonoBehaviour
     void DrawLineBetweenUnselectedCoins()
     {
         int indx = 0;
-        lineRenderer.material = lineRenderer.materials[0];
+        _lr.material = _lr.materials[0];
         foreach (var coin in coins)
         {
             if(selectedCoin != coin)
             {
-                lineRenderer.SetPosition(indx,coin.transform.position);
+                _lr.SetPosition(indx,coin.transform.position);
                 indx++;
             }   
         }
     }
+    
+    void CalculateThePowerMultiplier()
+    {
+        powerMultiplier = moveTargetPos.magnitude / maxPowerVector.magnitude;
+        maxPowerVector = new Vector2(200,200);
+
+        if(moveTargetPos.magnitude > maxPowerVector.magnitude)
+            powerMultiplier = 1;
+        
+        Debug.Log("powermultiplier = " + powerMultiplier);
+    }
 
     void ThrowTheSelectedCoin()
     {
-        moveTargetPos = new Vector2((Mathf.Abs(moveTargetPos.x) > maxPowerVector.x ? maxPowerVector.x:moveTargetPos.x),
-        (Mathf.Abs(moveTargetPos.y) > maxPowerVector.y ? maxPowerVector.y:moveTargetPos.y));
         if(selectedCoin != null)
-            selectedCoin.MoveTo(moveTargetPos);
+            selectedCoin.MoveTo(moveTargetPos.normalized);
     }
 
     void ShowLineRenderer()
     {
-        lineRenderer.enabled =true;
+        _lr.enabled =true;
     }
     void DisappearLineRenderer()
     {
-        lineRenderer.enabled = false;
+        _lr.enabled = false;
     }
 
-    void DisplayArrow()
-    {
-        _arrow.SetActive(true);
-    }
-
-    void DisappearArrow()
-    {
-        _arrow.SetActive(false);
-    }
-    
-    void ArrowPositioning()
-    {
-        _arrow.transform.position = selectedCoin.transform.position;
-    }
-    void ArrowRotation()
-    {
-        float targetRot = Mathf.Sin(Mathf.Sqrt(moveTargetPos.x * moveTargetPos.x + moveTargetPos.y * moveTargetPos.y));
-        _arrow.gameObject.transform.rotation = Quaternion.AngleAxis(targetRot*30,Vector3.up);
-        // _arrow.gameObject.transform.rotation = Quaternion.Euler(moveTargetPos);
-    }
+   
     void OnDisable()
     {
         EventManager.OnUnselectedCoins -= DrawLineBetweenUnselectedCoins;
         EventManager.onCoinSelect -= ShowLineRenderer;
-        EventManager.onCoinSelect -= DisplayArrow;
-        EventManager.onCoinSelect -= ArrowPositioning;
-        EventManager.OnPrepareToThrow -= ArrowRotation;
+        EventManager.OnPrepareToThrow -= CalculateThePowerMultiplier;
         EventManager.OnThrow -= ThrowTheSelectedCoin;
         EventManager.OnThrow -= DisappearLineRenderer;
-        EventManager.OnThrow += DisappearArrow;
     }
 }
 
