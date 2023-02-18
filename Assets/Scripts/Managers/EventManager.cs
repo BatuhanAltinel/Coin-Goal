@@ -6,4 +6,5 @@ public class EventManager : MonoBehaviour
     public static Action OnUnselectedCoins;
     public static Action OnPrepareToThrow;
     public static Action OnThrow;
+    public static Action OnThrowEnd;
 }
