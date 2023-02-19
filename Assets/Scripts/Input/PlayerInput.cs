@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     Touch _touch;
-    bool isMoved = false;
-    Vector2 firstFingerPos = Vector2.zero;
-    Vector2 lastFingerPos = Vector2.zero;
+    bool _canMove = false;
+    Vector2 _firstFingerPos = Vector2.zero;
+    Vector2 _lastFingerPos = Vector2.zero;
 
     void Update()
     {
@@ -28,7 +28,7 @@ public class PlayerInput : MonoBehaviour
                 {
                     if(hit.transform.TryGetComponent<Coin>(out Coin coin))
                     {
-                        firstFingerPos = _touch.position;
+                        _firstFingerPos = _touch.position;
                         
                         CoinManager.Instance.SetTheCoinSelected(coin);
                         EventManager.onCoinSelect.Invoke();
@@ -38,25 +38,25 @@ public class PlayerInput : MonoBehaviour
             }
             else if(_touch.phase == TouchPhase.Moved)
             {
-                lastFingerPos = _touch.position;
-                Vector2 targetPos = lastFingerPos - firstFingerPos;
+                _lastFingerPos = _touch.position;
+                Vector2 targetPos = _lastFingerPos - _firstFingerPos;
 
-                CoinManager.Instance.moveTargetPos = targetPos;
+                CoinManager.Instance.targetVector = targetPos;
                 EventManager.OnPrepareToThrow.Invoke();
 
                 if(targetPos.magnitude > 0)
-                    isMoved = true;
-                Debug.Log("target vector : "+targetPos.normalized);
+                    _canMove = true;
+                // Debug.Log("target vector : "+targetPos.normalized);
                 
             }
             else if(_touch.phase == TouchPhase.Ended)
             {
-                if(CoinManager.Instance.selectedCoin != null && isMoved)
+                if(CoinManager.Instance.SelectedCoin != null && _canMove)
                     EventManager.OnThrow.Invoke();
 
-                CoinManager.Instance.SetTheCoinSelected(null);
-                EventManager.OnThrowEnd.Invoke();
-                isMoved = false;
+                // CoinManager.Instance.SetTheCoinSelected(null);
+                // EventManager.OnThrowEnd.Invoke();
+                _canMove = false;
             }
         }
     }
