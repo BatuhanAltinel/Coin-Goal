@@ -6,41 +6,43 @@ public class Coin : MonoBehaviour
 {
     Rigidbody _rb;
     LineRenderer _lr;
-    Vector3 normalScale;
-    float powerMeter = 5;
+    Vector3 _normalScale;
+    Color _normalColor;
+    float _powerMeter = 5;
     [SerializeField] float _maxPower;
 
     void OnEnable()
     {
-        EventManager.onCoinSelect += CoinScaleUp;
-        EventManager.onCoinSelect += CoinNormalScale;
+        EventManager.onCoinSelect += CoinColorChange;
+        EventManager.onCoinSelect += CoinNormalColor;
         EventManager.OnPrepareToThrow += SetTheArrow;
         EventManager.OnThrow += RemoveArrow;
-        EventManager.OnThrowEnd += CoinNormalScale;
+        EventManager.OnThrowEnd += CoinNormalColor;
     }
     
     void Start()
     {
-        normalScale = new Vector3(1,0.1f,1);
+        _normalColor = gameObject.GetComponent<MeshRenderer>().material.color;
+        _normalScale = new Vector3(1,0.1f,1);
         _rb = GetComponent<Rigidbody>();    
         _lr = GetComponent<LineRenderer>();
     }
 
     public void MoveTo(Vector2 dir)
     {
-        Vector3 movePos = new Vector3(dir.x,transform.position.y,dir.y);
-        _rb.AddForce(-movePos * _maxPower * CoinManager.Instance.PowerMultiplier ,ForceMode.Impulse);
+        Vector3 moveVector = new Vector3(dir.x,transform.position.y,dir.y);
+        _rb.AddForce(-moveVector * _maxPower * CoinManager.Instance.PowerMultiplier ,ForceMode.Impulse);
     }
     void SetTheArrow()
     {
-        if(CoinManager.Instance.selectedCoin == this)
+        if(CoinManager.Instance.SelectedCoin == this)
         {
             _lr.enabled = true;
             _lr.positionCount = 2;
             _lr.SetPosition(0,Vector3.zero);
-            Vector3 newPos = new Vector3(CoinManager.Instance.moveTargetPos.x,0,CoinManager.Instance.moveTargetPos.y);
+            Vector3 newPos = new Vector3(CoinManager.Instance.targetVector.x,0,CoinManager.Instance.targetVector.y);
 
-            _lr.SetPosition(1,-newPos.normalized * powerMeter * CoinManager.Instance.PowerMultiplier);
+            _lr.SetPosition(1,-newPos.normalized * _powerMeter * CoinManager.Instance.PowerMultiplier);
         }
         
     }
@@ -50,26 +52,28 @@ public class Coin : MonoBehaviour
         _lr.enabled = false;
     }
 
-    void CoinScaleUp()
+    void CoinColorChange()
     {
-        if(CoinManager.Instance.selectedCoin == this)
-            transform.localScale = new Vector3(1.5f,0.1f,1.5f);
+        if(CoinManager.Instance.SelectedCoin == this)
+            gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
+            // transform.localScale = new Vector3(1.5f,0.1f,1.5f);
     }
     
-    void CoinNormalScale()
+    void CoinNormalColor()
     {
-        if(CoinManager.Instance.selectedCoin != this)
+        if(CoinManager.Instance.SelectedCoin != this)
         {
-            transform.localScale = normalScale;
+            // transform.localScale = _normalScale;
+            gameObject.GetComponent<MeshRenderer>().material.color = _normalColor;
         }
         
     }
     void OnDisable()
     {
-        EventManager.onCoinSelect -= CoinScaleUp;
-        EventManager.onCoinSelect -= CoinNormalScale;
+        EventManager.onCoinSelect -= CoinColorChange;
+        EventManager.onCoinSelect -= CoinNormalColor;
         EventManager.OnPrepareToThrow -= SetTheArrow;
         EventManager.OnThrow -= RemoveArrow;
-        EventManager.OnThrowEnd -= CoinNormalScale;
+        EventManager.OnThrowEnd -= CoinNormalColor;
     }
 }
