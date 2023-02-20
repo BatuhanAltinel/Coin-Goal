@@ -45,7 +45,6 @@ public class PlayerInput : MonoBehaviour
 
                 if(targetPos.magnitude > 0)
                     GameManager.Instance.CanMove = true;
-                // Debug.Log("target vector : "+targetPos.normalized);
                 
             }
             else if(_touch.phase == TouchPhase.Ended)

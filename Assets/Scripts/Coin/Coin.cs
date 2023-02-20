@@ -8,7 +8,7 @@ public class Coin : MonoBehaviour
     LineRenderer _lr;
     Vector3 _normalScale;
     Color _normalColor;
-    float _powerMeter = 5;
+    [SerializeField] float _powerMeter = 5;
     Vector3 _previousPosition;
     Vector3 _startPosition;
     [SerializeField] float _maxPower;
@@ -52,7 +52,7 @@ public class Coin : MonoBehaviour
     public void MoveTo(Vector2 dir)
     {
         Vector3 moveVector = new Vector3(dir.x,transform.position.y,dir.y);
-        _rb.AddForce(-moveVector * _maxPower * CoinManager.Instance.PowerMultiplier ,ForceMode.Impulse);
+        _rb.AddForce(-moveVector * _maxPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
     }
     void SetTheArrow()
     {
