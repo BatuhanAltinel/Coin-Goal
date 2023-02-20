@@ -2,22 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Line : MonoBehaviour
+public class Goal : MonoBehaviour
 {
-    
-    void Start()
-    {
-        
-    }
-
     void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.TryGetComponent(out Coin coin))
         {
             if(coin == CoinManager.Instance.SelectedCoin)
             {
-                GameManager.Instance.PassTheLine = true;
-                Debug.Log("Seleceted coin passed.");
+            EventManager.OnGoal.Invoke();
+            GameManager.Instance.IsGoal = true;
+            gameObject.GetComponent<BoxCollider>().enabled = false;
             }
         }
     }

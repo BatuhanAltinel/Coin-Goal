@@ -26,11 +26,11 @@ public class CoinManager : MonoBehaviour
     void OnEnable()
     {
         EventManager.OnUnselectedCoins += DrawLineBetweenUnselectedCoins;
-        // EventManager.OnUnselectedCoins += SetThePassLine;
         EventManager.onCoinSelect += ShowLineRenderer;
         EventManager.OnPrepareToThrow += CalculateThePowerMultiplier;
         EventManager.OnThrow += DisappearLineRenderer;
         EventManager.OnThrow += ThrowTheSelectedCoin;
+        EventManager.OnPassFail += AllCoinsGoToPreviousPosition;
     }
     void Awake()
     {
@@ -64,26 +64,27 @@ public class CoinManager : MonoBehaviour
             }   
         }
         
-        SetThePassLine();
+        SetThePassLineTransform();
     }
 
-    void SetThePassLine()
+    void SetThePassLineTransform()
     {
 
         float X_NewScale = Vector3.Magnitude(unSelectedCoinsPositions[1] - unSelectedCoinsPositions[0]);
-        _PassLinePrefab.transform.localScale = new Vector3(X_NewScale,1,0.3f);
+        _PassLinePrefab.transform.localScale = new Vector3(X_NewScale,1,0.2f);
 
         float X_NewPos = unSelectedCoinsPositions[0].x + (unSelectedCoinsPositions[1].x - unSelectedCoinsPositions[0].x) / 2;
         float Z_NewPos = unSelectedCoinsPositions[0].z + (unSelectedCoinsPositions[1].z - unSelectedCoinsPositions[0].z) / 2;
         _PassLinePrefab.transform.position = new Vector3(X_NewPos,1,Z_NewPos);
 
         float Y_NewRotation = Mathf.Atan2((unSelectedCoinsPositions[0].x - unSelectedCoinsPositions[1].x),(unSelectedCoinsPositions[0].z - unSelectedCoinsPositions[1].z)) * 180 / Mathf.PI;
-        _PassLinePrefab.transform.rotation = Quaternion.Euler(0,Y_NewRotation - 270,0);
+        _PassLinePrefab.transform.rotation = Quaternion.Euler(0,Y_NewRotation + 90,0);
 
-        foreach (var coin in coins)
-        {
-            unSelectedCoinsPositions.Remove(coin.transform.position);
-        }
+        // foreach (var coin in coins)
+        // {
+        //     unSelectedCoinsPositions.Remove(coin.transform.position);
+        // }
+        unSelectedCoinsPositions.Clear();
     }
     
     void CalculateThePowerMultiplier()
@@ -103,6 +104,13 @@ public class CoinManager : MonoBehaviour
             selectedCoin.MoveTo(targetVector.normalized);
     }
 
+    void AllCoinsGoToPreviousPosition()
+    {
+        foreach (var coin in coins)
+        {
+            coin.GoToPreviousPosition();
+        }
+    }
     void ShowLineRenderer()
     {
         _lr.enabled =true;
@@ -116,11 +124,11 @@ public class CoinManager : MonoBehaviour
     void OnDisable()
     {
         EventManager.OnUnselectedCoins -= DrawLineBetweenUnselectedCoins;
-        // EventManager.OnUnselectedCoins -= SetThePassLine;
         EventManager.onCoinSelect -= ShowLineRenderer;
         EventManager.OnPrepareToThrow -= CalculateThePowerMultiplier;
         EventManager.OnThrow -= ThrowTheSelectedCoin;
         EventManager.OnThrow -= DisappearLineRenderer;
+        EventManager.OnPassFail -= AllCoinsGoToPreviousPosition;
     }
 }
 
