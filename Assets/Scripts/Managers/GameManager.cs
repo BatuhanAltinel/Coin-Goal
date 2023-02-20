@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +12,9 @@ public class GameManager : MonoBehaviour
     public bool PassTheLine { get; set; }
     public bool IsGoal { get; set; }
     [SerializeField] float _timeToWait = 3f;
+    
+    public TextMeshProUGUI GoalText;
+    public Button RestartButton;
 
     void OnEnable()
     {
@@ -41,7 +47,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(_timeToWait);
 
         
-        if(PassTheLine)
+        if(PassTheLine)     // CHECK FIRST IS PASS THE LINE ??? ***************************
         {
             CanMove = true;
             PassTheLine = false;
@@ -60,6 +66,15 @@ public class GameManager : MonoBehaviour
     void TheGoal()
     {
         Debug.Log("GOOOOOOOOOOOOOOOOOOOOOOAAAAAALLLLLL");
+        GoalText.gameObject.SetActive(true);
+        RestartButton.gameObject.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(0);
+        RestartButton.gameObject.SetActive(false);
+        GoalText.gameObject.SetActive(false);
     }
 
     void OnDisable()
