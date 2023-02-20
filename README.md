@@ -1,2 +1,2 @@
 # Coin Goal
- Old coin match game made by Unity
+ Old triple coin game which i used to play when i was a child. Made by Unity
