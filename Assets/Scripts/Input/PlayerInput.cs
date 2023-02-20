@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     Touch _touch;
-    bool _canMove = false;
     Vector2 _firstFingerPos = Vector2.zero;
     Vector2 _lastFingerPos = Vector2.zero;
 
@@ -16,7 +15,7 @@ public class PlayerInput : MonoBehaviour
 
     void Inputs()
     {
-        if(Input.touchCount > 0)
+        if(Input.touchCount > 0 && GameManager.Instance.CanMove)
         {
             _touch = Input.GetTouch(0);
 
@@ -45,19 +44,23 @@ public class PlayerInput : MonoBehaviour
                 EventManager.OnPrepareToThrow.Invoke();
 
                 if(targetPos.magnitude > 0)
-                    _canMove = true;
-                // Debug.Log("target vector : "+targetPos.normalized);
+                    GameManager.Instance.CanMove = true;
                 
             }
             else if(_touch.phase == TouchPhase.Ended)
             {
-                if(CoinManager.Instance.SelectedCoin != null && _canMove)
+                if(CoinManager.Instance.SelectedCoin != null && GameManager.Instance.CanMove)
+                {
                     EventManager.OnThrow.Invoke();
+                    EventManager.OnAfterThrow.Invoke();
+                }
+                    
 
+                
                 // CoinManager.Instance.SetTheCoinSelected(null);
                 // EventManager.OnThrowEnd.Invoke();
-                _canMove = false;
-            }
+            }    
         }
     }
 }
+

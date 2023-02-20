@@ -16,10 +16,8 @@ public class Line : MonoBehaviour
         {
             if(coin == CoinManager.Instance.SelectedCoin)
             {
-                // GameManager.Instance.PassTrough = true;
+                GameManager.Instance.PassTheLine = true;
                 Debug.Log("Seleceted coin passed.");
-                CoinManager.Instance.SelectedCoin = null;
-                EventManager.OnThrowEnd.Invoke();
             }
         }
     }

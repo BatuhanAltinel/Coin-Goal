@@ -8,13 +8,16 @@ public class Coin : MonoBehaviour
     LineRenderer _lr;
     Vector3 _normalScale;
     Color _normalColor;
-    float _powerMeter = 5;
+    [SerializeField] float _powerMeter = 5;
+    Vector3 _previousPosition;
+    Vector3 _startPosition;
     [SerializeField] float _maxPower;
 
     void OnEnable()
     {
         EventManager.onCoinSelect += CoinColorChange;
         EventManager.onCoinSelect += CoinNormalColor;
+        EventManager.onCoinSelect += PreviousPosition;
         EventManager.OnPrepareToThrow += SetTheArrow;
         EventManager.OnThrow += RemoveArrow;
         EventManager.OnThrowEnd += CoinNormalColor;
@@ -22,16 +25,34 @@ public class Coin : MonoBehaviour
     
     void Start()
     {
+        _previousPosition = transform.position;
+        _startPosition = transform.position;
+
         _normalColor = gameObject.GetComponent<MeshRenderer>().material.color;
         _normalScale = new Vector3(1,0.1f,1);
+        
         _rb = GetComponent<Rigidbody>();    
         _lr = GetComponent<LineRenderer>();
     }
 
+    void GotoStartPosition()
+    {
+        transform.position = _startPosition;
+    }
+
+    void PreviousPosition()
+    {
+        _previousPosition = transform.position;
+    }
+
+    public void GoToPreviousPosition()
+    {
+        transform.position = _previousPosition;
+    }
     public void MoveTo(Vector2 dir)
     {
         Vector3 moveVector = new Vector3(dir.x,transform.position.y,dir.y);
-        _rb.AddForce(-moveVector * _maxPower * CoinManager.Instance.PowerMultiplier ,ForceMode.Impulse);
+        _rb.AddForce(-moveVector * _maxPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
     }
     void SetTheArrow()
     {
@@ -72,6 +93,7 @@ public class Coin : MonoBehaviour
     {
         EventManager.onCoinSelect -= CoinColorChange;
         EventManager.onCoinSelect -= CoinNormalColor;
+        EventManager.onCoinSelect -= PreviousPosition;
         EventManager.OnPrepareToThrow -= SetTheArrow;
         EventManager.OnThrow -= RemoveArrow;
         EventManager.OnThrowEnd -= CoinNormalColor;
