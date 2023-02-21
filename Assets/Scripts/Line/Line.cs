@@ -10,7 +10,7 @@ public class Line : MonoBehaviour
         
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if(other.gameObject.TryGetComponent(out Coin coin))
         {

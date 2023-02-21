@@ -11,14 +11,16 @@ public class GameManager : MonoBehaviour
     public bool CanMove {get;set;}
     public bool PassTheLine { get; set; }
     public bool IsGoal { get; set; }
-    [SerializeField] float _timeToWait = 3f;
+    [SerializeField] float _timeToWait = 2f;
     
     public TextMeshProUGUI GoalText;
     public Button RestartButton;
 
     void OnEnable()
     {
+        EventManager.onCoinSelect += PassTheLineFalse;
         EventManager.OnAfterThrow += WaitForCoinMovement;
+        EventManager.OnPassFail += FaultScreen;
         EventManager.OnGoal += TheGoal;
     }
     void Awake()
@@ -33,6 +35,10 @@ public class GameManager : MonoBehaviour
         IsGoal = false;
     }
 
+    void PassTheLineFalse()
+    {
+        PassTheLine = false;
+    }
     void WaitForCoinMovement()
     {
         StartCoroutine(WaitForCoinMovementRoutine());
@@ -40,23 +46,24 @@ public class GameManager : MonoBehaviour
 
     IEnumerator WaitForCoinMovementRoutine()
     {
-        
+        float elapsedTime = 0;
         CanMove = false;
-        Debug.Log("Wait for seconds....");
-            
-        yield return new WaitForSeconds(_timeToWait);
-
         
-        if(PassTheLine)     // CHECK FIRST IS PASS THE LINE ??? ***************************
+        while(elapsedTime < _timeToWait && !PassTheLine)
         {
-            CanMove = true;
-            PassTheLine = false;
-        }    
-        else
+            elapsedTime += Time.deltaTime;
+
+            // Debug.Log("Waiting coin move for a " + elapsedTime + " seconds");
+
+            yield return new WaitForEndOfFrame();
+        }
+        
+        if(!PassTheLine)
         {
             EventManager.OnPassFail.Invoke();
-            CanMove = true;
-        }
+        } 
+
+        CanMove = true;
         CoinManager.Instance.SetTheCoinSelected(null);
         EventManager.OnThrowEnd.Invoke();
         
@@ -77,9 +84,16 @@ public class GameManager : MonoBehaviour
         GoalText.gameObject.SetActive(false);
     }
 
+    void FaultScreen()
+    {
+        Debug.Log("Fauult!!");
+    }
+
     void OnDisable()
     {
+        EventManager.onCoinSelect -= PassTheLineFalse;
         EventManager.OnAfterThrow -= WaitForCoinMovement;
+        EventManager.OnPassFail -= FaultScreen;
         EventManager.OnGoal -= TheGoal;
     }
 }
