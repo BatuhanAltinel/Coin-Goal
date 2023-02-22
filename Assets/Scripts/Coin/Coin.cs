@@ -52,10 +52,16 @@ public class Coin : MonoBehaviour
     }
     public void MoveTo(Vector2 dir)
     {
-        Vector3 moveVector = new Vector3(dir.x,transform.position.y,dir.y);
-        _rb.AddForce(-moveVector * _maxPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
+        Vector3 targetVector = new Vector3(dir.x,transform.position.y,dir.y);
+        _rb.AddForce(-targetVector * _maxPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
     }
     
+    public void MoveTo(Vector2 dir,float shootPower)
+    {
+        Vector3 targetVector = new Vector3(dir.x,transform.position.y,dir.y);
+        _rb.AddForce(-targetVector * shootPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
+    }
+
     void SetTheArrow()
     {
         if(CoinManager.Instance.SelectedCoin == this)

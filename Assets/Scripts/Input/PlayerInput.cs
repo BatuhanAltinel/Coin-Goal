@@ -30,6 +30,7 @@ public class PlayerInput : MonoBehaviour
                         _firstFingerPos = _touch.position;
                         
                         CoinManager.Instance.SetTheCoinSelected(coin);
+                        CoinManager.Instance.SetThePreviousCoin(coin);
                         EventManager.onCoinSelect.Invoke();
                         EventManager.OnUnselectedCoins.Invoke();
                     }
