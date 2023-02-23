@@ -40,7 +40,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 807701740509971176}
-  - component: {fileID: 807701740509971177}
   m_Layer: 0
   m_Name: Goal Keeper
   m_TagString: Untagged
@@ -66,22 +65,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &807701740509971177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 807701740509971183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6f36148ee60eb8488b876e5d36ea75e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _goalKeeper: {fileID: 6759405932645626901}
-  _rightWayPoint: {fileID: 807701740452184008}
-  _leftWayPoint: {fileID: 807701740972501439}
-  _moveSpeed: 0.13
 --- !u!1 &807701740972501438
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +189,36 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 628cfa84e6999bf4bb011b7bbf1dfc94, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.59
+  m_Radius: 1.05
   m_Height: 3.05
   m_Direction: 1
   m_Center: {x: 0, y: 1.42, z: 0}
+--- !u!65 &648091905
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6759405932645626901}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.2413237, y: 0.53875136, z: 1.7071571}
+  m_Center: {x: 0.020798564, y: 0.23062432, z: 0.35357857}
+--- !u!114 &648091904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6759405932645626901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f36148ee60eb8488b876e5d36ea75e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _goalKeeper: {fileID: 6759405932645626901}
+  _rightWayPoint: {fileID: 807701740452184008}
+  _leftWayPoint: {fileID: 807701740972501439}
+  _moveSpeed: 0.13

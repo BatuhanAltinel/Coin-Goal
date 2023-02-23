@@ -52,6 +52,20 @@ public class GoalKeeper : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.TryGetComponent<Coin>(out Coin coin))
+        {
+            Debug.Log("Coin collided");
+
+            float randomVectorY = Random.Range(1,0);
+            float randomVectorX = Random.Range(-1,1);
+
+            float randomPower = Random.Range(600,750);
+            coin.MoveTo(new Vector2(randomVectorX,randomVectorY),randomPower);
+        }
+    }
+
     void PlaySadAnim()
     {
         anim.SetBool("IsGoal",true);
