@@ -6,7 +6,7 @@ public class SportMan : MonoBehaviour
 {
     Animator _anim;
     Vector2 _randomShootVector;
-    float _maxShootPower = 1000;
+    float _maxShootPower = 1100f;
 
     void Start()
     {
@@ -52,5 +52,5 @@ public class SportMan : MonoBehaviour
 
         _randomShootVector = new Vector2(randomVectorX,randomVectorY);
     }
-    
+
 }

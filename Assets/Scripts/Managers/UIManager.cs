@@ -7,16 +7,23 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _faultText;   
     [SerializeField] TextMeshProUGUI _goalText;
+    [SerializeField] TextMeshProUGUI _successText;
+
     [SerializeField] Image _faultRefereeImage;
+    [SerializeField] Image _goalImage;
 
+    
     public Button RestartButton;
-
     [SerializeField]  GameObject _PullAndThrowPanel;
+
+    [SerializeField] string[] successWords;
 
     void OnEnable()
     {
         EventManager.OnGoal += TheGoal;
         EventManager.OnPassFail += FaultScreenOn;
+        EventManager.OnPassFail += PassSuccessTextOff;
+        EventManager.OnPassSucces += PassSuccessTextOn;
         EventManager.onCoinSelect += FaultScreenOff;
         EventManager.onCoinSelect += DeActivePullAndThrowPanel;
     }
@@ -24,6 +31,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         _PullAndThrowPanel.SetActive(true);
+        _successText.gameObject.SetActive(false);
     }
 
     void DeActivePullAndThrowPanel()
@@ -33,7 +41,7 @@ public class UIManager : MonoBehaviour
     void TheGoal()
     {
         _goalText.gameObject.SetActive(true);
-        RestartButton.gameObject.SetActive(true);
+        _goalImage.gameObject.SetActive(true);
     }
     void FaultScreenOn()
     {
@@ -45,6 +53,18 @@ public class UIManager : MonoBehaviour
     {
         _faultText.gameObject.SetActive(false);
         _faultRefereeImage.gameObject.SetActive(false);
+    }
+
+    void PassSuccessTextOn()
+    {
+        int rand = Random.Range(0,successWords.Length);
+        _successText.text = successWords[rand];
+        _successText.gameObject.SetActive(true);
+    }
+
+    void PassSuccessTextOff()
+    {
+        _successText.gameObject.SetActive(false);
     }
 
     public void RestartGame()
@@ -59,6 +79,8 @@ public class UIManager : MonoBehaviour
         EventManager.onCoinSelect -= DeActivePullAndThrowPanel;
         EventManager.OnGoal -= TheGoal;
         EventManager.OnPassFail -= FaultScreenOn;
+        EventManager.OnPassFail -= PassSuccessTextOff;
+        EventManager.OnPassSucces -= PassSuccessTextOn;
         EventManager.onCoinSelect -= FaultScreenOff;
     }
 }
