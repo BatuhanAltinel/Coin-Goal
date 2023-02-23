@@ -66,7 +66,7 @@ public class Coin : MonoBehaviour
     public void MoveTo(Vector2 dir,float shootPower)
     {
         Vector3 targetVector = new Vector3(dir.x,transform.position.y,dir.y);
-        _rb.AddForce(-targetVector * shootPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
+        _rb.AddForce(-targetVector * shootPower * Time.deltaTime ,ForceMode.Impulse);
     }
 
     void SetTheArrow()

@@ -7,7 +7,7 @@ public class SportMan : MonoBehaviour
     Animator _anim;
     Vector2 _randomShootVector;
     float _randomShootPower;
-    float _minShootPower = 749;
+    float _minShootPower = 650;
     float _maxShootPower = 750;
 
     void Start()
