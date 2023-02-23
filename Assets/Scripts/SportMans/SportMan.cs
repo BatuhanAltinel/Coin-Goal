@@ -6,9 +6,7 @@ public class SportMan : MonoBehaviour
 {
     Animator _anim;
     Vector2 _randomShootVector;
-    float _randomShootPower;
-    float _minShootPower = 650;
-    float _maxShootPower = 750;
+    float _maxShootPower = 1000;
 
     void Start()
     {
@@ -29,10 +27,9 @@ public class SportMan : MonoBehaviour
         if(other.gameObject.TryGetComponent<Coin>(out Coin coin))
         {
             RandomShootVector();
-            RandomShootPower();
             PlayShootAnim();
 
-            coin.MoveTo(_randomShootVector,_randomShootPower);
+            coin.MoveTo(_randomShootVector,_maxShootPower);
 
             Invoke("PlayIdleAnim",0.2f);
         }
@@ -56,8 +53,4 @@ public class SportMan : MonoBehaviour
         _randomShootVector = new Vector2(randomVectorX,randomVectorY);
     }
     
-    void RandomShootPower()
-    {
-        _randomShootPower = Random.Range(_minShootPower,_maxShootPower);
-    }
 }
