@@ -7,7 +7,7 @@ public class SportMan : MonoBehaviour
     Animator _anim;
     Vector2 _randomShootVector;
     float _randomShootPower;
-    float _minShootPower = 600;
+    float _minShootPower = 749;
     float _maxShootPower = 750;
 
     void Start()
@@ -50,10 +50,10 @@ public class SportMan : MonoBehaviour
 
     void RandomShootVector()
     {
-        float randomX = Random.Range(-1,1);
-        float randomY = Random.Range(-1,1);
+        float randomVectorY = Random.Range(1,0);
+        float randomVectorX = Random.Range(-0.5f,0.5f);
 
-        _randomShootVector = new Vector2(randomX,randomY);
+        _randomShootVector = new Vector2(randomVectorX,randomVectorY);
     }
     
     void RandomShootPower()

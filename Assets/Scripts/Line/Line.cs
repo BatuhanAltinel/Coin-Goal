@@ -30,7 +30,6 @@ public class Line : MonoBehaviour
             if(coin == CoinManager.Instance.SelectedCoin)
             {
                 GameManager.Instance.PassTheLine = true;
-                Debug.Log("Seleceted coin passed.");
             }
         }
     }
