@@ -356,7 +356,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 202664342}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -486,7 +486,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 235807807}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1216,7 +1216,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 818466328}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1413,7 +1413,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.8962264, g: 0.38470095, b: 0.74881655, a: 0}
+  m_BackGroundColor: {r: 0.8365715, g: 0.3843137, b: 0.8980392, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1662,7 +1662,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1007291472}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2321,10 +2321,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 216268623}
     m_Modifications:
     - target: {fileID: 139496722, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
-      propertyPath: _warningArrow
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 139496722, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
       propertyPath: _passTheLineText
       value: 
       objectReference: {fileID: 2063384079}
@@ -2334,10 +2330,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8764314455289187295, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
       propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8764314455289187295, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
-      propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8764314455289187295, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
@@ -3295,11 +3287,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7283976323966892939, guid: aa327760e2ceb3d4ca889f6507b699c6, type: 3}
       propertyPath: m_Size.z
-      value: 0.57
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 7283976323966892939, guid: aa327760e2ceb3d4ca889f6507b699c6, type: 3}
       propertyPath: m_Center.z
-      value: 1.23
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7283976323966893045, guid: aa327760e2ceb3d4ca889f6507b699c6, type: 3}
       propertyPath: m_Name
