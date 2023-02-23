@@ -6,12 +6,11 @@ public class Coin : MonoBehaviour
 {
     Rigidbody _rb;
     LineRenderer _lr;
-    Vector3 _normalScale;
     Color _normalColor;
-    [SerializeField] float _powerMeter = 5;
+    [SerializeField] float _powerMeter = 3f;
     Vector3 _previousPosition;
     Vector3 _startPosition;
-    [SerializeField] float _maxPower;
+    [SerializeField] float _maxPower = 750f;
 
     void OnEnable()
     {
@@ -19,6 +18,7 @@ public class Coin : MonoBehaviour
         EventManager.onCoinSelect += CoinNormalColor;
         EventManager.onCoinSelect += PreviousPosition;
         EventManager.OnPrepareToThrow += SetTheArrow;
+        EventManager.onCoinSelect += ResetCoinForces;
         EventManager.OnThrow += RemoveArrow;
         EventManager.OnThrowEnd += CoinNormalColor;
     }
@@ -29,7 +29,6 @@ public class Coin : MonoBehaviour
         _startPosition = transform.position;
 
         _normalColor = gameObject.GetComponent<MeshRenderer>().material.color;
-        _normalScale = new Vector3(1,0.1f,1);
         
         _rb = GetComponent<Rigidbody>();    
         _lr = GetComponent<LineRenderer>();
@@ -47,13 +46,29 @@ public class Coin : MonoBehaviour
 
     public void GoToPreviousPosition()
     {
+        ResetCoinForces();
         transform.position = _previousPosition;
     }
+
+    void ResetCoinForces()
+    {
+        _rb.velocity = new Vector3(0f,0f,0f);                           // Reset the rigidbody forces
+        transform.rotation = Quaternion.Euler(new Vector3(0f,0f,0f)); 
+        _rb.angularVelocity = new Vector3(0f,0f,0f);
+    }
+
     public void MoveTo(Vector2 dir)
     {
-        Vector3 moveVector = new Vector3(dir.x,transform.position.y,dir.y);
-        _rb.AddForce(-moveVector * _maxPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
+        Vector3 targetVector = new Vector3(dir.x,transform.position.y,dir.y);
+        _rb.AddForce(-targetVector * _maxPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
     }
+    
+    public void MoveTo(Vector2 dir,float shootPower)
+    {
+        Vector3 targetVector = new Vector3(dir.x,transform.position.y,dir.y);
+        _rb.AddForce(-targetVector * shootPower * Time.deltaTime ,ForceMode.Impulse);
+    }
+
     void SetTheArrow()
     {
         if(CoinManager.Instance.SelectedCoin == this)
@@ -77,14 +92,12 @@ public class Coin : MonoBehaviour
     {
         if(CoinManager.Instance.SelectedCoin == this)
             gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
-            // transform.localScale = new Vector3(1.5f,0.1f,1.5f);
     }
     
     void CoinNormalColor()
     {
         if(CoinManager.Instance.SelectedCoin != this)
         {
-            // transform.localScale = _normalScale;
             gameObject.GetComponent<MeshRenderer>().material.color = _normalColor;
         }
         
@@ -95,6 +108,7 @@ public class Coin : MonoBehaviour
         EventManager.onCoinSelect -= CoinNormalColor;
         EventManager.onCoinSelect -= PreviousPosition;
         EventManager.OnPrepareToThrow -= SetTheArrow;
+        EventManager.onCoinSelect -= ResetCoinForces;
         EventManager.OnThrow -= RemoveArrow;
         EventManager.OnThrowEnd -= CoinNormalColor;
     }

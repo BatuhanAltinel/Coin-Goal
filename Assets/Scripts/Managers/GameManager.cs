@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,16 +8,16 @@ public class GameManager : MonoBehaviour
     public bool CanMove {get;set;}
     public bool PassTheLine { get; set; }
     public bool IsGoal { get; set; }
-    [SerializeField] float _timeToWait = 3f;
+    [SerializeField] float _timeToWait = 2f;
+
     
-    public TextMeshProUGUI GoalText;
-    public Button RestartButton;
 
     void OnEnable()
     {
+        EventManager.onCoinSelect += PassTheLineFalse;
         EventManager.OnAfterThrow += WaitForCoinMovement;
-        EventManager.OnGoal += TheGoal;
     }
+    
     void Awake()
     {
         if(Instance == null)
@@ -33,6 +30,10 @@ public class GameManager : MonoBehaviour
         IsGoal = false;
     }
 
+    void PassTheLineFalse()
+    {
+        PassTheLine = false;
+    }
     void WaitForCoinMovement()
     {
         StartCoroutine(WaitForCoinMovementRoutine());
@@ -40,46 +41,29 @@ public class GameManager : MonoBehaviour
 
     IEnumerator WaitForCoinMovementRoutine()
     {
-        
+        float elapsedTime = 0;
         CanMove = false;
-        Debug.Log("Wait for seconds....");
-            
-        yield return new WaitForSeconds(_timeToWait);
-
         
-        if(PassTheLine)     // CHECK FIRST IS PASS THE LINE ??? ***************************
+        while(elapsedTime < _timeToWait && !PassTheLine)
         {
-            CanMove = true;
-            PassTheLine = false;
-        }    
-        else
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        
+        if(!PassTheLine)
         {
             EventManager.OnPassFail.Invoke();
-            CanMove = true;
-        }
+        } 
+
+        CanMove = true;
         CoinManager.Instance.SetTheCoinSelected(null);
         EventManager.OnThrowEnd.Invoke();
-        
-
-    }
-
-    void TheGoal()
-    {
-        Debug.Log("GOOOOOOOOOOOOOOOOOOOOOOAAAAAALLLLLL");
-        GoalText.gameObject.SetActive(true);
-        RestartButton.gameObject.SetActive(true);
-    }
-
-    public void RestartGame()
-    {
-        SceneManager.LoadScene(0);
-        RestartButton.gameObject.SetActive(false);
-        GoalText.gameObject.SetActive(false);
     }
 
     void OnDisable()
     {
+        EventManager.onCoinSelect -= PassTheLineFalse;
         EventManager.OnAfterThrow -= WaitForCoinMovement;
-        EventManager.OnGoal -= TheGoal;
+        
     }
 }

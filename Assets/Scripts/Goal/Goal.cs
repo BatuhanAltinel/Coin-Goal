@@ -8,10 +8,17 @@ public class Goal : MonoBehaviour
     {
         if(other.gameObject.TryGetComponent(out Coin coin))
         {
-            EventManager.OnGoal.Invoke();
-            GameManager.Instance.IsGoal = true;
-            gameObject.GetComponent<BoxCollider>().enabled = false;
+            if(GameManager.Instance.PassTheLine)
+            {
+                EventManager.OnGoal.Invoke();
+                GameManager.Instance.IsGoal = true;
+                gameObject.GetComponent<BoxCollider>().enabled = false;
+            }
             
+        }else
+        {
+            EventManager.OnPassFail.Invoke();
+            // Fault Screen
         }
     }
 }
