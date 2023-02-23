@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class Line : MonoBehaviour
 {
+    [SerializeField] GameObject _passTheLineText;
     
-    void Start()
+
+    void OnEnable()
     {
-        
+        EventManager.onCoinSelect += ShowTheWarningElements;
+        EventManager.OnThrow += DisappearWarningElements;
     }
+    void ShowTheWarningElements()
+    {
+        _passTheLineText.SetActive(true);
+    }
+    
+    void DisappearWarningElements()
+    {
+        _passTheLineText.SetActive(false);
+    }
+
 
     void OnTriggerStay(Collider other)
     {
@@ -20,5 +33,11 @@ public class Line : MonoBehaviour
                 Debug.Log("Seleceted coin passed.");
             }
         }
+    }
+
+    void OnDisable()
+    {
+        EventManager.onCoinSelect -= ShowTheWarningElements;
+        EventManager.OnThrow -= DisappearWarningElements;
     }
 }

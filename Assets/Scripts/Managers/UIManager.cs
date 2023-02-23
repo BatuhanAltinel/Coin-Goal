@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _faultText;   
     [SerializeField] TextMeshProUGUI _goalText;
+    [SerializeField] Image _faultRefereeImage;
 
     public Button RestartButton;
 
@@ -17,9 +18,18 @@ public class UIManager : MonoBehaviour
         EventManager.OnGoal += TheGoal;
         EventManager.OnPassFail += FaultScreenOn;
         EventManager.onCoinSelect += FaultScreenOff;
+        EventManager.onCoinSelect += DeActivePullAndThrowPanel;
     }
 
+    void Start()
+    {
+        _PullAndThrowPanel.SetActive(true);
+    }
 
+    void DeActivePullAndThrowPanel()
+    {
+        _PullAndThrowPanel.SetActive(false);
+    }
     void TheGoal()
     {
         _goalText.gameObject.SetActive(true);
@@ -28,11 +38,13 @@ public class UIManager : MonoBehaviour
     void FaultScreenOn()
     {
         _faultText.gameObject.SetActive(true);
+        _faultRefereeImage.gameObject.SetActive(true);
     }
 
     void FaultScreenOff()
     {
         _faultText.gameObject.SetActive(false);
+        _faultRefereeImage.gameObject.SetActive(false);
     }
 
     public void RestartGame()
@@ -44,6 +56,7 @@ public class UIManager : MonoBehaviour
 
     void OnDisable()
     {
+        EventManager.onCoinSelect -= DeActivePullAndThrowPanel;
         EventManager.OnGoal -= TheGoal;
         EventManager.OnPassFail -= FaultScreenOn;
         EventManager.onCoinSelect -= FaultScreenOff;
