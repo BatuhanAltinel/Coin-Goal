@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour
             {
                 Ray ray = Camera.main.ScreenPointToRay(_touch.position);
                 RaycastHit hit;
+
                 if(Physics.Raycast(ray,out hit))
                 {
                     if(hit.transform.TryGetComponent<Coin>(out Coin coin))
@@ -31,8 +32,8 @@ public class PlayerInput : MonoBehaviour
                         
                         CoinManager.Instance.SetTheCoinSelected(coin);
                         CoinManager.Instance.SetThePreviousCoin(coin);
+
                         EventManager.onCoinSelect.Invoke();
-                        EventManager.OnUnselectedCoins.Invoke();
                     }
                 }
             }
@@ -42,10 +43,9 @@ public class PlayerInput : MonoBehaviour
                 Vector2 targetPos = _lastFingerPos - _firstFingerPos;
 
                 CoinManager.Instance.targetVector = targetPos;
+                
                 EventManager.OnPrepareToThrow.Invoke();
 
-                if(targetPos.magnitude > 0)
-                    GameManager.Instance.CanMove = true;
                 
             }
             else if(_touch.phase == TouchPhase.Ended)
@@ -55,11 +55,6 @@ public class PlayerInput : MonoBehaviour
                     EventManager.OnThrow.Invoke();
                     EventManager.OnAfterThrow.Invoke();
                 }
-                    
-
-                
-                // CoinManager.Instance.SetTheCoinSelected(null);
-                // EventManager.OnThrowEnd.Invoke();
             }    
         }
     }

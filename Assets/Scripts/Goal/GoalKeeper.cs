@@ -56,8 +56,6 @@ public class GoalKeeper : MonoBehaviour
     {
         if(other.gameObject.TryGetComponent<Coin>(out Coin coin))
         {
-            Debug.Log("Coin collided");
-
             float randomVectorY = Random.Range(1,0);
             float randomVectorX = Random.Range(-1,1);
 

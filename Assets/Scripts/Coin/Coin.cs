@@ -18,6 +18,7 @@ public class Coin : MonoBehaviour
         EventManager.onCoinSelect += CoinNormalColor;
         EventManager.onCoinSelect += PreviousPosition;
         EventManager.OnPrepareToThrow += SetTheArrow;
+        EventManager.onCoinSelect += ResetCoinForces;
         EventManager.OnThrow += RemoveArrow;
         EventManager.OnThrowEnd += CoinNormalColor;
     }
@@ -45,11 +46,17 @@ public class Coin : MonoBehaviour
 
     public void GoToPreviousPosition()
     {
+        ResetCoinForces();
+        transform.position = _previousPosition;
+    }
+
+    void ResetCoinForces()
+    {
         _rb.velocity = new Vector3(0f,0f,0f);                           // Reset the rigidbody forces
         transform.rotation = Quaternion.Euler(new Vector3(0f,0f,0f)); 
         _rb.angularVelocity = new Vector3(0f,0f,0f);
-        transform.position = _previousPosition;
     }
+
     public void MoveTo(Vector2 dir)
     {
         Vector3 targetVector = new Vector3(dir.x,transform.position.y,dir.y);
@@ -101,6 +108,7 @@ public class Coin : MonoBehaviour
         EventManager.onCoinSelect -= CoinNormalColor;
         EventManager.onCoinSelect -= PreviousPosition;
         EventManager.OnPrepareToThrow -= SetTheArrow;
+        EventManager.onCoinSelect -= ResetCoinForces;
         EventManager.OnThrow -= RemoveArrow;
         EventManager.OnThrowEnd -= CoinNormalColor;
     }

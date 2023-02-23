@@ -13,25 +13,26 @@ public class CoinManager : MonoBehaviour
 
 
     [SerializeField] List<Coin> coins;
-    Coin selectedCoin;
-    public Coin SelectedCoin { get {return selectedCoin;} set{selectedCoin = value;} }
-    Coin previousCoin;
-    public Coin PreviousCoin { get{return previousCoin;} set{ previousCoin = value;}}
+    public Coin SelectedCoin { get ; set;}
+    public Coin PreviousCoin { get; set;}
 
     [SerializeField] GameObject _PassLinePrefab;
 
     public Vector2 targetVector;
     [SerializeField] Vector2 maxPowerVector;
     
-    List<Vector3> unSelectedCoinsPositions = new();
+    [SerializeField] List<Vector3> unSelectedCoinsPositions = new();
 
     void OnEnable()
     {
-        EventManager.OnUnselectedCoins += DrawLineBetweenUnselectedCoins;
+        EventManager.onCoinSelect += FindUnselectedCoins;
         EventManager.onCoinSelect += ShowLineRenderer;
+        EventManager.onCoinSelect += DrawLineBetweenUnselectedCoins;
+        EventManager.onCoinSelect += SetThePassLineTransform;
         EventManager.OnPrepareToThrow += CalculateThePowerMultiplier;
         EventManager.OnThrow += DisappearLineRenderer;
         EventManager.OnThrow += ThrowTheSelectedCoin;
+        EventManager.OnThrow += ResetUnselectedCoins;
         EventManager.OnPassFail += AllCoinsGoToPreviousPosition;
     }
     void Awake()
@@ -49,46 +50,65 @@ public class CoinManager : MonoBehaviour
 
     public void SetTheCoinSelected(Coin coin)
     {
-        selectedCoin = coin;
+        SelectedCoin = coin;
     }
     
     public void SetThePreviousCoin(Coin coin)
     {
-        previousCoin = coin;
+        PreviousCoin = coin;
     }
     
-    void DrawLineBetweenUnselectedCoins()
+    void FindUnselectedCoins()
     {
-        int indx = 0;
-        _lr.material = _lr.materials[0];
-        
         foreach (var coin in coins)
         {
-            if(selectedCoin != coin)
+            if(coin != SelectedCoin)
             {
                 unSelectedCoinsPositions.Add(coin.transform.position);
-                _lr.SetPosition(indx,coin.transform.position);
-                indx++;
-            }   
+            }
+        }
+    }
+
+    void DrawLineBetweenUnselectedCoins()
+    {
+        _lr.material = _lr.materials[0];
+
+        if(unSelectedCoinsPositions.Count > 1)
+        {
+            for (int i = 0; i < unSelectedCoinsPositions.Count; i++)
+            {
+                _lr.SetPosition(i,unSelectedCoinsPositions[i]);
+            }
         }
         
-        SetThePassLineTransform();
-
-        unSelectedCoinsPositions.Clear();
     }
 
     void SetThePassLineTransform()
     {
+        if(unSelectedCoinsPositions.Count > 1)
+        {
+            for(int i = 0; i < unSelectedCoinsPositions.Count - 1; i++)
+            {
+                float X_NewScale = Vector3.Magnitude(unSelectedCoinsPositions[i+1] - unSelectedCoinsPositions[i]);
+                X_NewScale -= 2.2f;
+                _PassLinePrefab.transform.localScale = new Vector3(X_NewScale,1,0.2f);
 
-        float X_NewScale = Vector3.Magnitude(unSelectedCoinsPositions[1] - unSelectedCoinsPositions[0]);
-        _PassLinePrefab.transform.localScale = new Vector3(X_NewScale,1,0.2f);
+                float X_NewPos = unSelectedCoinsPositions[i].x + (unSelectedCoinsPositions[i+1].x - unSelectedCoinsPositions[i].x) / 2;
+                float Z_NewPos = unSelectedCoinsPositions[i].z + (unSelectedCoinsPositions[i+1].z - unSelectedCoinsPositions[i].z) / 2;
+                _PassLinePrefab.transform.position = new Vector3(X_NewPos,1,Z_NewPos);
 
-        float X_NewPos = unSelectedCoinsPositions[0].x + (unSelectedCoinsPositions[1].x - unSelectedCoinsPositions[0].x) / 2;
-        float Z_NewPos = unSelectedCoinsPositions[0].z + (unSelectedCoinsPositions[1].z - unSelectedCoinsPositions[0].z) / 2;
-        _PassLinePrefab.transform.position = new Vector3(X_NewPos,1,Z_NewPos);
+                float Y_NewRotation = Mathf.Atan2((unSelectedCoinsPositions[i].x - unSelectedCoinsPositions[i+1].x),
+                                                    (unSelectedCoinsPositions[i].z - unSelectedCoinsPositions[1].z)) * 180 / Mathf.PI;
+                _PassLinePrefab.transform.rotation = Quaternion.Euler(0,Y_NewRotation + 90,0);
+            }
 
-        float Y_NewRotation = Mathf.Atan2((unSelectedCoinsPositions[0].x - unSelectedCoinsPositions[1].x),(unSelectedCoinsPositions[0].z - unSelectedCoinsPositions[1].z)) * 180 / Mathf.PI;
-        _PassLinePrefab.transform.rotation = Quaternion.Euler(0,Y_NewRotation + 90,0);
+        }
+                
+    }
+
+    void ResetUnselectedCoins()
+    {
+        unSelectedCoinsPositions.Clear();
     }
     
     void CalculateThePowerMultiplier()
@@ -102,8 +122,8 @@ public class CoinManager : MonoBehaviour
 
     void ThrowTheSelectedCoin()
     {
-        if(selectedCoin != null)
-            selectedCoin.MoveTo(targetVector.normalized);
+        if(SelectedCoin != null)
+            SelectedCoin.MoveTo(targetVector.normalized);
     }
 
     void AllCoinsGoToPreviousPosition()
@@ -127,11 +147,14 @@ public class CoinManager : MonoBehaviour
    
     void OnDisable()
     {
-        EventManager.OnUnselectedCoins -= DrawLineBetweenUnselectedCoins;
+        EventManager.onCoinSelect -= FindUnselectedCoins;
         EventManager.onCoinSelect -= ShowLineRenderer;
+        EventManager.onCoinSelect -= DrawLineBetweenUnselectedCoins;
+        EventManager.onCoinSelect -= SetThePassLineTransform;
         EventManager.OnPrepareToThrow -= CalculateThePowerMultiplier;
         EventManager.OnThrow -= ThrowTheSelectedCoin;
         EventManager.OnThrow -= DisappearLineRenderer;
+        EventManager.OnThrow -= ResetUnselectedCoins;
         EventManager.OnPassFail -= AllCoinsGoToPreviousPosition;
     }
 }

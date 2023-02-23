@@ -795,6 +795,7 @@ MonoBehaviour:
   _PassLinePrefab: {fileID: 1086208284}
   targetVector: {x: 0, y: 0}
   maxPowerVector: {x: 8, y: 8}
+  unSelectedCoinsPositions: []
 --- !u!120 &657792878
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -2091,6 +2092,10 @@ PrefabInstance:
     - target: {fileID: 8764314455289187295, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
       propertyPath: m_RootOrder
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8764314455289187295, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8764314455289187295, guid: 119ffab2fb4b7e04fa07a966459859f1, type: 3}
       propertyPath: m_LocalPosition.x

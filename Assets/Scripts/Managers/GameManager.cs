@@ -47,9 +47,6 @@ public class GameManager : MonoBehaviour
         while(elapsedTime < _timeToWait && !PassTheLine)
         {
             elapsedTime += Time.deltaTime;
-
-            // Debug.Log("Waiting coin move for a " + elapsedTime + " seconds");
-
             yield return new WaitForEndOfFrame();
         }
         
