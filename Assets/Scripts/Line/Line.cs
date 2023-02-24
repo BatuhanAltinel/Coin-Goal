@@ -9,7 +9,7 @@ public class Line : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.onCoinSelect += ShowTheWarningElements;
+        EventManager.OnCoinSelect += ShowTheWarningElements;
         EventManager.OnThrow += DisappearWarningElements;
     }
     void ShowTheWarningElements()
@@ -23,7 +23,19 @@ public class Line : MonoBehaviour
     }
 
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.TryGetComponent(out Coin coin))
+        {
+            if(coin == CoinManager.Instance.SelectedCoin)
+            {
+                GameManager.Instance.PassTheLine = true;
+                EventManager.OnPassSucces.Invoke();
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider other)
     {
         if(other.gameObject.TryGetComponent(out Coin coin))
         {
@@ -37,7 +49,7 @@ public class Line : MonoBehaviour
 
     void OnDisable()
     {
-        EventManager.onCoinSelect -= ShowTheWarningElements;
+        EventManager.OnCoinSelect -= ShowTheWarningElements;
         EventManager.OnThrow -= DisappearWarningElements;
     }
 }

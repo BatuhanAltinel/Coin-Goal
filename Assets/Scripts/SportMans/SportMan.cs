@@ -30,7 +30,7 @@ public class SportMan : MonoBehaviour
             PlayShootAnim();
 
             coin.MoveTo(_randomShootVector,_maxShootPower);
-
+            EventManager.OnKickBack.Invoke();
             Invoke("PlayIdleAnim",0.2f);
         }
     }

@@ -33,11 +33,11 @@ public class PlayerInput : MonoBehaviour
                         CoinManager.Instance.SetTheCoinSelected(coin);
                         CoinManager.Instance.SetThePreviousCoin(coin);
 
-                        EventManager.onCoinSelect.Invoke();
+                        EventManager.OnCoinSelect.Invoke();
                     }
                 }
             }
-            else if(_touch.phase == TouchPhase.Moved)
+            else if(_touch.phase == TouchPhase.Moved && CoinManager.Instance.SelectedCoin != null)
             {
                 _lastFingerPos = _touch.position;
                 Vector2 targetPos = _lastFingerPos - _firstFingerPos;

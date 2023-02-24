@@ -25,10 +25,10 @@ public class CoinManager : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.onCoinSelect += FindUnselectedCoins;
-        EventManager.onCoinSelect += ShowLineRenderer;
-        EventManager.onCoinSelect += DrawLineBetweenUnselectedCoins;
-        EventManager.onCoinSelect += SetThePassLineTransform;
+        EventManager.OnCoinSelect += FindUnselectedCoins;
+        EventManager.OnCoinSelect += ShowLineRenderer;
+        EventManager.OnCoinSelect += DrawLineBetweenUnselectedCoins;
+        EventManager.OnCoinSelect += SetThePassLineTransform;
         EventManager.OnPrepareToThrow += CalculateThePowerMultiplier;
         EventManager.OnThrow += DisappearLineRenderer;
         EventManager.OnThrow += ThrowTheSelectedCoin;
@@ -147,10 +147,10 @@ public class CoinManager : MonoBehaviour
    
     void OnDisable()
     {
-        EventManager.onCoinSelect -= FindUnselectedCoins;
-        EventManager.onCoinSelect -= ShowLineRenderer;
-        EventManager.onCoinSelect -= DrawLineBetweenUnselectedCoins;
-        EventManager.onCoinSelect -= SetThePassLineTransform;
+        EventManager.OnCoinSelect -= FindUnselectedCoins;
+        EventManager.OnCoinSelect -= ShowLineRenderer;
+        EventManager.OnCoinSelect -= DrawLineBetweenUnselectedCoins;
+        EventManager.OnCoinSelect -= SetThePassLineTransform;
         EventManager.OnPrepareToThrow -= CalculateThePowerMultiplier;
         EventManager.OnThrow -= ThrowTheSelectedCoin;
         EventManager.OnThrow -= DisappearLineRenderer;

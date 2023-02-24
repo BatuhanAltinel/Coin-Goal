@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI _successText;
 
     [SerializeField] Image _faultRefereeImage;
-    [SerializeField] Image _goalImage;
 
     
     public Button RestartButton;
@@ -18,14 +18,16 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] string[] successWords;
 
+    [SerializeField] float _successTextSpeed = 0.7f;
+    [SerializeField] float _goalTextSpeed = 1.5f;
+
     void OnEnable()
     {
         EventManager.OnGoal += TheGoal;
         EventManager.OnPassFail += FaultScreenOn;
-        EventManager.OnPassFail += PassSuccessTextOff;
         EventManager.OnPassSucces += PassSuccessTextOn;
-        EventManager.onCoinSelect += FaultScreenOff;
-        EventManager.onCoinSelect += DeActivePullAndThrowPanel;
+        EventManager.OnCoinSelect += FaultScreenOff;
+        EventManager.OnCoinSelect += DeActivePullAndThrowPanel;
     }
 
     void Start()
@@ -41,7 +43,7 @@ public class UIManager : MonoBehaviour
     void TheGoal()
     {
         _goalText.gameObject.SetActive(true);
-        _goalImage.gameObject.SetActive(true);
+        _goalText.gameObject.transform.DOScale(new Vector3(1,1,1),_goalTextSpeed).SetEase(Ease.InOutBack);  // TRY DIFFERENT EAESES.
     }
     void FaultScreenOn()
     {
@@ -60,11 +62,8 @@ public class UIManager : MonoBehaviour
         int rand = Random.Range(0,successWords.Length);
         _successText.text = successWords[rand];
         _successText.gameObject.SetActive(true);
-    }
-
-    void PassSuccessTextOff()
-    {
-        _successText.gameObject.SetActive(false);
+        _successText.gameObject.transform.DOScale(new Vector3(2,1,1),_successTextSpeed).SetEase(Ease.Linear).
+        OnComplete(() => _successText.gameObject.transform.localScale = new Vector3(0,1,1));
     }
 
     public void RestartGame()
@@ -76,11 +75,10 @@ public class UIManager : MonoBehaviour
 
     void OnDisable()
     {
-        EventManager.onCoinSelect -= DeActivePullAndThrowPanel;
+        EventManager.OnCoinSelect -= DeActivePullAndThrowPanel;
         EventManager.OnGoal -= TheGoal;
         EventManager.OnPassFail -= FaultScreenOn;
-        EventManager.OnPassFail -= PassSuccessTextOff;
         EventManager.OnPassSucces -= PassSuccessTextOn;
-        EventManager.onCoinSelect -= FaultScreenOff;
+        EventManager.OnCoinSelect -= FaultScreenOff;
     }
 }

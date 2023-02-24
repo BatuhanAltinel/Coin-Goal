@@ -61,6 +61,7 @@ public class GoalKeeper : MonoBehaviour
 
             float randomPower = Random.Range(600,750);
             coin.MoveTo(new Vector2(randomVectorX,randomVectorY),randomPower);
+            EventManager.OnKickBack.Invoke();
         }
     }
 

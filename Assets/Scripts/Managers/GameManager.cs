@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.onCoinSelect += PassTheLineFalse;
+        EventManager.OnCoinSelect += PassTheLineFalse;
         EventManager.OnAfterThrow += WaitForCoinMovement;
     }
     
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
 
     void OnDisable()
     {
-        EventManager.onCoinSelect -= PassTheLineFalse;
+        EventManager.OnCoinSelect -= PassTheLineFalse;
         EventManager.OnAfterThrow -= WaitForCoinMovement;
         
     }

@@ -14,11 +14,11 @@ public class Coin : MonoBehaviour
 
     void OnEnable()
     {
-        EventManager.onCoinSelect += CoinColorChange;
-        EventManager.onCoinSelect += CoinNormalColor;
-        EventManager.onCoinSelect += PreviousPosition;
+        EventManager.OnCoinSelect += CoinColorChange;
+        EventManager.OnCoinSelect += CoinNormalColor;
+        EventManager.OnCoinSelect += PreviousPosition;
         EventManager.OnPrepareToThrow += SetTheArrow;
-        EventManager.onCoinSelect += ResetCoinForces;
+        EventManager.OnCoinSelect += ResetCoinForces;
         EventManager.OnThrow += RemoveArrow;
         EventManager.OnThrowEnd += CoinNormalColor;
     }
@@ -104,11 +104,11 @@ public class Coin : MonoBehaviour
     }
     void OnDisable()
     {
-        EventManager.onCoinSelect -= CoinColorChange;
-        EventManager.onCoinSelect -= CoinNormalColor;
-        EventManager.onCoinSelect -= PreviousPosition;
+        EventManager.OnCoinSelect -= CoinColorChange;
+        EventManager.OnCoinSelect -= CoinNormalColor;
+        EventManager.OnCoinSelect -= PreviousPosition;
         EventManager.OnPrepareToThrow -= SetTheArrow;
-        EventManager.onCoinSelect -= ResetCoinForces;
+        EventManager.OnCoinSelect -= ResetCoinForces;
         EventManager.OnThrow -= RemoveArrow;
         EventManager.OnThrowEnd -= CoinNormalColor;
     }
