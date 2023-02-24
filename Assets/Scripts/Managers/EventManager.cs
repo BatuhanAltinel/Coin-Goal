@@ -11,4 +11,6 @@ public class EventManager : MonoBehaviour
     public static Action OnPassFail;
     public static Action OnGoal;
     public static Action OnKickBack;
+    public static Action OnRestartLevel;
+    public static Action OnNextLevel;
 }

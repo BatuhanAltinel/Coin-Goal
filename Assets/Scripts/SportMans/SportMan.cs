@@ -8,6 +8,13 @@ public class SportMan : MonoBehaviour
     Vector2 _randomShootVector;
     float _maxShootPower = 1100f;
 
+
+    void OnEnable()
+    {
+        EventManager.OnGoal += PlaySadAnim;
+        EventManager.OnRestartLevel += PlayIdleAnim;
+        EventManager.OnNextLevel += PlayIdleAnim;
+    }
     void Start()
     {
         _anim = GetComponent<Animator>();
@@ -15,7 +22,7 @@ public class SportMan : MonoBehaviour
 
     void Update()
     {
-        if(CoinManager.Instance.PreviousCoin != null)
+        if(CoinManager.Instance.PreviousCoin != null && !GameManager.Instance.IsGoal)
         {
             transform.parent.LookAt(CoinManager.Instance.PreviousCoin.transform,Vector3.up);
         }
@@ -24,7 +31,7 @@ public class SportMan : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.TryGetComponent<Coin>(out Coin coin))
+        if(other.gameObject.TryGetComponent<Coin>(out Coin coin) && !GameManager.Instance.IsGoal)
         {
             RandomShootVector();
             PlayShootAnim();
@@ -38,11 +45,17 @@ public class SportMan : MonoBehaviour
     void PlayIdleAnim()
     {
         _anim.SetBool("IsCoinCollision",false);
+        _anim.SetBool("IsGoal",false);
     }
 
     void PlayShootAnim()
     {
         _anim.SetBool("IsCoinCollision",true);
+    }
+
+    void PlaySadAnim()
+    {
+        _anim.SetBool("IsGoal",true);
     }
 
     void RandomShootVector()
@@ -53,4 +66,10 @@ public class SportMan : MonoBehaviour
         _randomShootVector = new Vector2(randomVectorX,randomVectorY);
     }
 
+    void OnDisable()
+    {
+        EventManager.OnGoal -= PlaySadAnim;
+        EventManager.OnRestartLevel -= PlayIdleAnim;
+        EventManager.OnNextLevel -= PlayIdleAnim;
+    }
 }

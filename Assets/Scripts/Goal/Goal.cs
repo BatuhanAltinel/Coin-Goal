@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Goal : MonoBehaviour
 {
+
+    void OnEnable()
+    {
+        EventManager.OnRestartLevel += OnRestartGame;
+        EventManager.OnNextLevel += OnRestartGame;
+    }
     void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.TryGetComponent(out Coin coin))
@@ -18,7 +24,17 @@ public class Goal : MonoBehaviour
         }else
         {
             EventManager.OnPassFail.Invoke();
-            // Fault Screen
         }
+    }
+
+    void OnRestartGame()
+    {
+        gameObject.GetComponent<BoxCollider>().enabled = true;
+    }
+
+    void OnDisable()
+    {
+        EventManager.OnRestartLevel -= OnRestartGame;
+        EventManager.OnNextLevel -= OnRestartGame;
     }
 }

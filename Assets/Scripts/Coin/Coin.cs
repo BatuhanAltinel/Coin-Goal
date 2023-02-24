@@ -34,8 +34,9 @@ public class Coin : MonoBehaviour
         _lr = GetComponent<LineRenderer>();
     }
 
-    void GotoStartPosition()
+    public void GotoStartPosition()
     {
+        ResetCoinForces();
         transform.position = _startPosition;
     }
 

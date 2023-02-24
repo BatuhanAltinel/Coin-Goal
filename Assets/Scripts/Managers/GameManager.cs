@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     {
         EventManager.OnCoinSelect += PassTheLineFalse;
         EventManager.OnAfterThrow += WaitForCoinMovement;
+        EventManager.OnRestartLevel += RestartLevel;
+        EventManager.OnNextLevel += RestartLevel;
     }
     
     void Awake()
@@ -50,7 +52,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         
-        if(!PassTheLine)
+        if(!PassTheLine && !IsGoal)
         {
             EventManager.OnPassFail.Invoke();
         } 
@@ -60,10 +62,17 @@ public class GameManager : MonoBehaviour
         EventManager.OnThrowEnd.Invoke();
     }
 
+    void RestartLevel()
+    {
+        CanMove = true;
+        IsGoal = false;
+        PassTheLine = false;
+    }
     void OnDisable()
     {
         EventManager.OnCoinSelect -= PassTheLineFalse;
         EventManager.OnAfterThrow -= WaitForCoinMovement;
-        
+        EventManager.OnRestartLevel -= RestartLevel;
+        EventManager.OnNextLevel -= RestartLevel;
     }
 }

@@ -18,6 +18,8 @@ public class GoalKeeper : MonoBehaviour
     void OnEnable()
     {
         EventManager.OnGoal += PlaySadAnim;    
+        EventManager.OnRestartLevel += PlaySideWalkAnim;
+        EventManager.OnNextLevel += PlaySideWalkAnim;
     }
 
     void Start()
@@ -54,7 +56,7 @@ public class GoalKeeper : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.TryGetComponent<Coin>(out Coin coin))
+        if(other.gameObject.TryGetComponent<Coin>(out Coin coin) && !GameManager.Instance.IsGoal)
         {
             float randomVectorY = Random.Range(1,0);
             float randomVectorX = Random.Range(-1,1);
@@ -69,9 +71,15 @@ public class GoalKeeper : MonoBehaviour
     {
         anim.SetBool("IsGoal",true);
     }
+    void PlaySideWalkAnim()
+    {
+        anim.SetBool("IsGoal",false);
+    }
 
     void OnDisable()
     {
         EventManager.OnGoal -= PlaySadAnim;    
+        EventManager.OnRestartLevel -= PlaySideWalkAnim;
+        EventManager.OnNextLevel -= PlaySideWalkAnim;
     }
 }

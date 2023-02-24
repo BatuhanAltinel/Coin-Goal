@@ -17,7 +17,7 @@ public class CoinManager : MonoBehaviour
     public Coin PreviousCoin { get; set;}
 
     [SerializeField] GameObject _PassLinePrefab;
-
+    [SerializeField] float _lineScaleOffset = 2.2f;
     public Vector2 targetVector;
     [SerializeField] Vector2 maxPowerVector;
     
@@ -34,6 +34,8 @@ public class CoinManager : MonoBehaviour
         EventManager.OnThrow += ThrowTheSelectedCoin;
         EventManager.OnThrow += ResetUnselectedCoins;
         EventManager.OnPassFail += AllCoinsGoToPreviousPosition;
+        EventManager.OnRestartLevel += AllCoinsGoToStartPosition;
+        EventManager.OnNextLevel += AllCoinsGoToStartPosition;
     }
     void Awake()
     {
@@ -90,7 +92,7 @@ public class CoinManager : MonoBehaviour
             for(int i = 0; i < unSelectedCoinsPositions.Count - 1; i++)
             {
                 float X_NewScale = Vector3.Magnitude(unSelectedCoinsPositions[i+1] - unSelectedCoinsPositions[i]);
-                X_NewScale -= 2.2f;
+                X_NewScale -= _lineScaleOffset;
                 _PassLinePrefab.transform.localScale = new Vector3(X_NewScale,1,0.2f);
 
                 float X_NewPos = unSelectedCoinsPositions[i].x + (unSelectedCoinsPositions[i+1].x - unSelectedCoinsPositions[i].x) / 2;
@@ -134,6 +136,14 @@ public class CoinManager : MonoBehaviour
         }
     }
 
+    void AllCoinsGoToStartPosition()
+    {
+        foreach (var coin in coins)
+        {
+            coin.GotoStartPosition();
+        }
+    }
+
     void ShowLineRenderer()
     {
         _lr.enabled =true;
@@ -156,6 +166,8 @@ public class CoinManager : MonoBehaviour
         EventManager.OnThrow -= DisappearLineRenderer;
         EventManager.OnThrow -= ResetUnselectedCoins;
         EventManager.OnPassFail -= AllCoinsGoToPreviousPosition;
+        EventManager.OnRestartLevel -= AllCoinsGoToStartPosition;
+        EventManager.OnNextLevel -= AllCoinsGoToStartPosition;
     }
 }
 
