@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
@@ -48,7 +47,25 @@ public class Coin : MonoBehaviour
     public void GoToPreviousPosition()
     {
         ResetCoinForces();
+        StartCoroutine(GoToPreviousPositionRoutine());
+    }
+
+    IEnumerator GoToPreviousPositionRoutine()
+    {
+        this.GetComponent<MeshCollider>().enabled = false;
+
+        while(Vector3.Distance(transform.position,_previousPosition) > 0.05f)
+        {
+            GameManager.Instance.CanMove = false;
+            this.transform.position = Vector3.Lerp(this.transform.position,_previousPosition,0.1f);
+            yield return new WaitForEndOfFrame();
+        }
+
         transform.position = _previousPosition;
+        this.GetComponent<MeshCollider>().enabled = true;
+        GameManager.Instance.CanMove = true;
+
+        yield break;
     }
 
     void ResetCoinForces()

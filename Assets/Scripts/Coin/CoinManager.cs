@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CoinManager : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class CoinManager : MonoBehaviour
     public Coin SelectedCoin { get ; set;}
     public Coin PreviousCoin { get; set;}
 
-    [SerializeField] GameObject _PassLinePrefab;
+    [SerializeField] GameObject[] _PassLinePrefab;
     [SerializeField] float _lineScaleOffset = 2.2f;
     public Vector2 targetVector;
     [SerializeField] Vector2 maxPowerVector;
@@ -29,6 +29,7 @@ public class CoinManager : MonoBehaviour
         EventManager.OnCoinSelect += ShowLineRenderer;
         EventManager.OnCoinSelect += DrawLineBetweenUnselectedCoins;
         EventManager.OnCoinSelect += SetThePassLineTransform;
+        EventManager.OnCoinSelect += LineColorChange;
         EventManager.OnPrepareToThrow += CalculateThePowerMultiplier;
         EventManager.OnThrow += DisappearLineRenderer;
         EventManager.OnThrow += ThrowTheSelectedCoin;
@@ -85,6 +86,11 @@ public class CoinManager : MonoBehaviour
         
     }
 
+    void LineColorChange()
+    {
+        _lr.DOColor(new Color2(Color.blue,Color.blue),new Color2(Color.green,Color.green),0.5f).SetEase(Ease.Linear).SetLoops(-1,LoopType.Yoyo);
+    }
+
     void SetThePassLineTransform()
     {
         if(unSelectedCoinsPositions.Count > 1)
@@ -93,15 +99,15 @@ public class CoinManager : MonoBehaviour
             {
                 float X_NewScale = Vector3.Magnitude(unSelectedCoinsPositions[i+1] - unSelectedCoinsPositions[i]);
                 X_NewScale -= _lineScaleOffset;
-                _PassLinePrefab.transform.localScale = new Vector3(X_NewScale,1,0.2f);
+                _PassLinePrefab[i].transform.localScale = new Vector3(X_NewScale,1,0.2f);
 
                 float X_NewPos = unSelectedCoinsPositions[i].x + (unSelectedCoinsPositions[i+1].x - unSelectedCoinsPositions[i].x) / 2;
                 float Z_NewPos = unSelectedCoinsPositions[i].z + (unSelectedCoinsPositions[i+1].z - unSelectedCoinsPositions[i].z) / 2;
-                _PassLinePrefab.transform.position = new Vector3(X_NewPos,1,Z_NewPos);
+                _PassLinePrefab[i].transform.position = new Vector3(X_NewPos,1,Z_NewPos);
 
                 float Y_NewRotation = Mathf.Atan2((unSelectedCoinsPositions[i].x - unSelectedCoinsPositions[i+1].x),
                                                     (unSelectedCoinsPositions[i].z - unSelectedCoinsPositions[1].z)) * 180 / Mathf.PI;
-                _PassLinePrefab.transform.rotation = Quaternion.Euler(0,Y_NewRotation + 90,0);
+                _PassLinePrefab[i].transform.rotation = Quaternion.Euler(0,Y_NewRotation + 90,0);
             }
 
         }
@@ -161,6 +167,7 @@ public class CoinManager : MonoBehaviour
         EventManager.OnCoinSelect -= ShowLineRenderer;
         EventManager.OnCoinSelect -= DrawLineBetweenUnselectedCoins;
         EventManager.OnCoinSelect -= SetThePassLineTransform;
+        EventManager.OnCoinSelect -= LineColorChange;
         EventManager.OnPrepareToThrow -= CalculateThePowerMultiplier;
         EventManager.OnThrow -= ThrowTheSelectedCoin;
         EventManager.OnThrow -= DisappearLineRenderer;
