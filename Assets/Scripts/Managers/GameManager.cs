@@ -1,11 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public bool CanMove {get;set;}
+    public bool CanMove { get; set; }
     public bool PassTheLine { get; set; }
     public bool IsGoal { get; set; }
     [SerializeField] float _timeToWait = 2f;

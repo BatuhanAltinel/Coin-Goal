@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
@@ -48,13 +46,13 @@ public class PlayerInput : MonoBehaviour
 
                 
             }
-            else if(_touch.phase == TouchPhase.Ended)
+            else if(_touch.phase == TouchPhase.Ended && CoinManager.Instance.SelectedCoin != null)
             {
-                if(CoinManager.Instance.SelectedCoin != null && GameManager.Instance.CanMove)
-                {
+                // if(CoinManager.Instance.SelectedCoin != null)
+                // {
                     EventManager.OnThrow.Invoke();
                     EventManager.OnAfterThrow.Invoke();
-                }
+                // }
             }    
         }
     }
