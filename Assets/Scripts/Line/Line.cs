@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Line : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class Line : MonoBehaviour
     void OnEnable()
     {
         EventManager.OnCoinSelect += ShowTheWarningElements;
+        EventManager.OnCoinSelect += PassTheLineTextBouncing;
         EventManager.OnThrow += DisappearWarningElements;
     }
     void ShowTheWarningElements()
@@ -22,6 +22,11 @@ public class Line : MonoBehaviour
         _passTheLineText.SetActive(false);
     }
 
+    void PassTheLineTextBouncing()
+    {
+        _passTheLineText.gameObject.transform.DOScale(new Vector3(1.2f,1.2f,1),0.8f).SetEase(Ease.Linear).SetLoops(4,LoopType.Yoyo).
+        OnComplete(() => _passTheLineText.gameObject.transform.localScale = new Vector3(1,1,1));
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -30,6 +35,8 @@ public class Line : MonoBehaviour
             if(coin == CoinManager.Instance.SelectedCoin)
             {
                 GameManager.Instance.PassTheLine = true;
+                GameManager.Instance.FaultCount = 0;
+
                 EventManager.OnPassSucces.Invoke();
             }
         }
@@ -42,6 +49,8 @@ public class Line : MonoBehaviour
             if(coin == CoinManager.Instance.SelectedCoin)
             {
                 GameManager.Instance.PassTheLine = true;
+                GameManager.Instance.FaultCount = 0;
+
                 EventManager.OnPassSucces.Invoke();
             }
         }
@@ -51,5 +60,6 @@ public class Line : MonoBehaviour
     {
         EventManager.OnCoinSelect -= ShowTheWarningElements;
         EventManager.OnThrow -= DisappearWarningElements;
+        EventManager.OnCoinSelect -= PassTheLineTextBouncing;
     }
 }
