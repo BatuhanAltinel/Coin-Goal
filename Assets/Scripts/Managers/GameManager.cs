@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public bool CanMove { get; set; }
     public bool PassTheLine { get; set; }
     public bool IsGoal { get; set; }
+    public int FaultCount { get; set; }
+
     [SerializeField] float _timeToWait = 2f;
 
     
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
         CanMove = true;
         PassTheLine = false;
         IsGoal = false;
+        FaultCount = 0;
     }
 
     void PassTheLineFalse()
@@ -53,6 +56,7 @@ public class GameManager : MonoBehaviour
         
         if(!PassTheLine && !IsGoal)
         {
+            FaultCount++;
             EventManager.OnPassFail.Invoke();
         } 
 
@@ -66,6 +70,7 @@ public class GameManager : MonoBehaviour
         CanMove = true;
         IsGoal = false;
         PassTheLine = false;
+        FaultCount = 0;
     }
     void OnDisable()
     {

@@ -14,7 +14,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image _faultRefereeImage;
 
     
-    public Button _NextLevelButton;
+    public GameObject _NextLevelButton;
+    public Button _RestartButton;
     [SerializeField]  GameObject _PullAndThrowPanel;
 
     [SerializeField] string[] successWords;
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
         EventManager.OnGoal += TheGoal;
         EventManager.OnGoal += ShowNextLevelButton;
         EventManager.OnPassFail += FaultScreenOn;
+        EventManager.OnPassFail += RestartButtonBouncing;
         EventManager.OnPassSucces += PassSuccessTextOn;
         EventManager.OnCoinSelect += DeActivePullAndThrowPanel;
     }
@@ -53,8 +55,9 @@ public class UIManager : MonoBehaviour
         _faultRefereeImage.gameObject.transform.DOScale(new Vector3(1,1,1),1f).SetEase(Ease.Linear)
         .OnComplete(() => _faultRefereeImage.gameObject.SetActive(false));
         _faultRefereeImage.gameObject.transform.localScale = new Vector3(0.9f,0.9f,1);
-    }
 
+    }
+    
 
     void PassSuccessTextOn()
     {
@@ -74,6 +77,18 @@ public class UIManager : MonoBehaviour
         _NextLevelButton.gameObject.SetActive(false);
         EventManager.OnRestartLevel.Invoke();
     }
+
+    void RestartButtonBouncing()
+    {
+        if(GameManager.Instance.FaultCount == 3)
+        {
+            _RestartButton.gameObject.transform.DOScale(new Vector3(1.2f,1.2f,1),1f).SetEase(Ease.InBounce).SetLoops(5,LoopType.Restart).
+            OnComplete(() => _RestartButton.gameObject.transform.localScale = new Vector3(1,1,1));
+            GameManager.Instance.FaultCount = 0;
+        }
+        
+    }
+
 
     void ShowNextLevelButton()
     {
@@ -97,6 +112,7 @@ public class UIManager : MonoBehaviour
         EventManager.OnGoal -= TheGoal;
         EventManager.OnGoal -=ShowNextLevelButton;
         EventManager.OnPassFail -= FaultScreenOn;
+        EventManager.OnPassFail -= RestartButtonBouncing;
         EventManager.OnPassSucces -= PassSuccessTextOn;
     }
 }
