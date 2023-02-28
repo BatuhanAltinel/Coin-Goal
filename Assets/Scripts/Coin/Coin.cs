@@ -89,7 +89,7 @@ public class Coin : MonoBehaviour
     {
         this.GetComponent<MeshCollider>().enabled = false;
 
-        while(Vector3.Distance(transform.position,_previousPosition) > 0.05f)
+        while(Vector3.Distance(transform.position,_previousPosition) > 0.8f)
         {
             GameManager.Instance.CanMove = false;
             this.transform.position = Vector3.Lerp(this.transform.position,_previousPosition,0.1f);

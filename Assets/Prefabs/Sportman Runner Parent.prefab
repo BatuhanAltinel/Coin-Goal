@@ -628,7 +628,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rightWayPoint: {fileID: 6269150635740198105}
   _leftWayPoint: {fileID: 6269150635375058852}
+  targetWayPoint: {fileID: 0}
+  _positionTransform: {fileID: 5494060639937108514}
+  _startPosition: {x: 0, y: 0, z: 0}
+  _startRotation: {x: 0, y: 0, z: 0, w: 0}
   _moveSpeed: 0.13
+  _anim: {fileID: 0}
+  _randomShootVector: {x: 0, y: 0}
+  _maxShootPower: 1100
 --- !u!1 &4844698472836944537
 GameObject:
   m_ObjectHideFlags: 0

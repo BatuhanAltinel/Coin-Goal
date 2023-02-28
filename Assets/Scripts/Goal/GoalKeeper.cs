@@ -96,10 +96,10 @@ public class GoalKeeper : MonoBehaviour
         Vector3 targetPos = new Vector3(50,50,transform.position.z);
         Quaternion targetRot = Quaternion.Euler(-155,180,-128);
 
-        while(Vector3.Distance(transform.position,targetPos) > 0.1f)
+        while(Vector3.Distance(transform.position,targetPos) > 1f)
         {
-            transform.position = Vector3.Lerp(transform.position,targetPos,0.1f);
-            transform.rotation = Quaternion.Lerp(transform.rotation,targetRot,0.1f);
+            transform.position = Vector3.Lerp(transform.position,targetPos,0.5f);
+            transform.rotation = Quaternion.Lerp(transform.rotation,targetRot,0.5f);
 
             yield return new WaitForEndOfFrame();
         }
