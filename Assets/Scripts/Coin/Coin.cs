@@ -62,7 +62,7 @@ public class Coin : MonoBehaviour
             OnPowerUp();
             break;
             case CoinStates.normal:
-            OnCrushTheSportman();
+            OnPowerUpEnd();
             break;
         }
             
@@ -89,7 +89,7 @@ public class Coin : MonoBehaviour
     {
         this.GetComponent<MeshCollider>().enabled = false;
 
-        while(Vector3.Distance(transform.position,_previousPosition) > 0.05f)
+        while(Vector3.Distance(transform.position,_previousPosition) > 0.8f)
         {
             GameManager.Instance.CanMove = false;
             this.transform.position = Vector3.Lerp(this.transform.position,_previousPosition,0.1f);
@@ -167,15 +167,14 @@ public class Coin : MonoBehaviour
 
     void OnPowerUpEnd()
     {
-        this.coinState = CoinStates.normal;
-        _shootPower = _normalPower;
-        gameObject.GetComponent<MeshRenderer>().material.color = _normalColor; 
+        if(coinState != CoinStates.powerUp)
+        {
+            this._shootPower = _normalPower;
+            this.gameObject.GetComponent<MeshRenderer>().material.color = _normalColor; 
+        }
+        
     }
 
-    void OnCrushTheSportman()
-    {
-        OnPowerUpEnd();
-    }
     
     void OnDisable()
     {
