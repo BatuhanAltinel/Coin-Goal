@@ -13,4 +13,6 @@ public class EventManager : MonoBehaviour
     public static Action OnKickBack;
     public static Action OnRestartLevel;
     public static Action OnNextLevel;
+
+    public static Action<CoinStates> OnCoinStateChanged;
 }
