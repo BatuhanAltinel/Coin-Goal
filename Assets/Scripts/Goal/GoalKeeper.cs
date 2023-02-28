@@ -10,7 +10,8 @@ public class GoalKeeper : MonoBehaviour
     [SerializeField] Transform _rightWayPoint;
     [SerializeField] Transform _leftWayPoint;
     Transform targetWayPoint;
-
+    Vector3 _startPosition;
+    Quaternion _startRotation;
     [SerializeField] float _moveSpeed;
     float elapsedTime = 0;
 
@@ -20,6 +21,8 @@ public class GoalKeeper : MonoBehaviour
         EventManager.OnGoal += PlaySadAnim;    
         EventManager.OnRestartLevel += PlaySideWalkAnim;
         EventManager.OnNextLevel += PlaySideWalkAnim;
+        EventManager.OnRestartLevel += OnRestart;
+        EventManager.OnNextLevel += OnRestart;
     }
 
     void Start()
@@ -27,6 +30,8 @@ public class GoalKeeper : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         anim.SetBool("IsGoal",false);
         targetWayPoint = _rightWayPoint;
+        _startPosition = transform.position;
+        _startRotation = transform.rotation;
     }
 
     void ChangeWayPoint()
@@ -58,13 +63,49 @@ public class GoalKeeper : MonoBehaviour
     {
         if(other.gameObject.TryGetComponent<Coin>(out Coin coin) && !GameManager.Instance.IsGoal)
         {
-            float randomVectorY = Random.Range(1,0);
-            float randomVectorX = Random.Range(-1,1);
+            if(coin.coinState == CoinStates.powerUp)
+            {
+                EventManager.OnCoinStateChanged.Invoke(CoinStates.normal);
+                OnCrushPowerUpCoin();
+            }else
+            {
+                float randomVectorY = Random.Range(1,0);
+                float randomVectorX = Random.Range(-1,1);
 
-            float randomPower = Random.Range(600,750);
-            coin.MoveTo(new Vector2(randomVectorX,randomVectorY),randomPower);
-            EventManager.OnKickBack.Invoke();
+                float randomPower = Random.Range(600,750);
+                coin.MoveTo(new Vector2(randomVectorX,randomVectorY),randomPower);
+                EventManager.OnKickBack.Invoke();
+            }
+            
         }
+    }
+
+    void OnRestart()
+    {
+        transform.position = _startPosition;
+        transform.rotation = _startRotation;
+    }
+
+    void OnCrushPowerUpCoin()
+    {
+        StartCoroutine(OnCrushPowerUpCoinRoutine());
+    }
+
+    IEnumerator OnCrushPowerUpCoinRoutine()
+    {
+        Vector3 targetPos = new Vector3(50,50,transform.position.z);
+        Quaternion targetRot = Quaternion.Euler(-155,180,-128);
+
+        while(Vector3.Distance(transform.position,targetPos) > 1f)
+        {
+            transform.position = Vector3.Lerp(transform.position,targetPos,0.5f);
+            transform.rotation = Quaternion.Lerp(transform.rotation,targetRot,0.5f);
+
+            yield return new WaitForEndOfFrame();
+        }
+        transform.position = targetPos;
+        transform.rotation = targetRot;
+        yield break;
     }
 
     void PlaySadAnim()
@@ -81,5 +122,7 @@ public class GoalKeeper : MonoBehaviour
         EventManager.OnGoal -= PlaySadAnim;    
         EventManager.OnRestartLevel -= PlaySideWalkAnim;
         EventManager.OnNextLevel -= PlaySideWalkAnim;
+        EventManager.OnRestartLevel -= OnRestart;
+        EventManager.OnNextLevel -= OnRestart;
     }
 }

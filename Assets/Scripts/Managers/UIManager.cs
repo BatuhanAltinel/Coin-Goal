@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {  
-    [SerializeField] TextMeshProUGUI _goalText;
+    [SerializeField] GameObject _goalText;
     [SerializeField] TextMeshProUGUI _successText;
     [SerializeField] TextMeshProUGUI _levelText;
 

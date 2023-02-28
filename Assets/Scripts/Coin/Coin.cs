@@ -1,6 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
+
+public enum CoinStates
+{
+    normal,
+    powerUp
+}
 public class Coin : MonoBehaviour
 {
     Rigidbody _rb;
@@ -9,7 +15,11 @@ public class Coin : MonoBehaviour
     [SerializeField] float _powerMeter = 3f;
     Vector3 _previousPosition;
     Vector3 _startPosition;
-    [SerializeField] float _maxPower = 750f;
+    [SerializeField] float _shootPower;
+    [SerializeField] float _maxPower = 1000f;
+    [SerializeField] float _normalPower = 750f;
+
+    public CoinStates coinState;
 
     void OnEnable()
     {
@@ -20,6 +30,9 @@ public class Coin : MonoBehaviour
         EventManager.OnCoinSelect += ResetCoinForces;
         EventManager.OnThrow += RemoveArrow;
         EventManager.OnThrowEnd += CoinNormalColor;
+        EventManager.OnCoinStateChanged += ChangeCoinState;
+        EventManager.OnRestartLevel += OnPowerUpEnd;
+        EventManager.OnNextLevel += OnPowerUpEnd;
     }
     
     void Start()
@@ -31,6 +44,28 @@ public class Coin : MonoBehaviour
         
         _rb = GetComponent<Rigidbody>();    
         _lr = GetComponent<LineRenderer>();
+
+        _shootPower = _normalPower;
+        coinState = CoinStates.normal;
+    }
+
+    void ChangeCoinState(CoinStates coinState)
+    {
+        if(CoinManager.Instance.PreviousCoin == this)
+        {
+            this.coinState = coinState;
+        }
+
+        switch (coinState)
+        {
+            case CoinStates.powerUp:
+            OnPowerUp();
+            break;
+            case CoinStates.normal:
+            OnPowerUpEnd();
+            break;
+        }
+            
     }
 
     public void GotoStartPosition()
@@ -54,7 +89,7 @@ public class Coin : MonoBehaviour
     {
         this.GetComponent<MeshCollider>().enabled = false;
 
-        while(Vector3.Distance(transform.position,_previousPosition) > 0.05f)
+        while(Vector3.Distance(transform.position,_previousPosition) > 0.8f)
         {
             GameManager.Instance.CanMove = false;
             this.transform.position = Vector3.Lerp(this.transform.position,_previousPosition,0.1f);
@@ -78,7 +113,7 @@ public class Coin : MonoBehaviour
     public void MoveTo(Vector2 dir)
     {
         Vector3 targetVector = new Vector3(dir.x,transform.position.y,dir.y);
-        _rb.AddForce(-targetVector * _maxPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
+        _rb.AddForce(-targetVector * _shootPower * CoinManager.Instance.PowerMultiplier * Time.deltaTime ,ForceMode.Impulse);
     }
     
     public void MoveTo(Vector2 dir,float shootPower)
@@ -108,18 +143,39 @@ public class Coin : MonoBehaviour
 
     void CoinColorChange()
     {
-        if(CoinManager.Instance.SelectedCoin == this)
+        if(CoinManager.Instance.SelectedCoin == this && this.coinState == CoinStates.normal)
             gameObject.GetComponent<MeshRenderer>().material.color = Color.blue;
     }
     
     void CoinNormalColor()
     {
-        if(CoinManager.Instance.SelectedCoin != this)
+        if(CoinManager.Instance.SelectedCoin != this && this.coinState == CoinStates.normal) 
         {
             gameObject.GetComponent<MeshRenderer>().material.color = _normalColor;
         }
         
     }
+
+    void OnPowerUp()
+    {
+        if(this == CoinManager.Instance.PreviousCoin)
+        {
+            _shootPower = _maxPower;
+            gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+    }
+
+    void OnPowerUpEnd()
+    {
+        if(coinState != CoinStates.powerUp)
+        {
+            this._shootPower = _normalPower;
+            this.gameObject.GetComponent<MeshRenderer>().material.color = _normalColor; 
+        }
+        
+    }
+
+    
     void OnDisable()
     {
         EventManager.OnCoinSelect -= CoinColorChange;
@@ -129,5 +185,8 @@ public class Coin : MonoBehaviour
         EventManager.OnCoinSelect -= ResetCoinForces;
         EventManager.OnThrow -= RemoveArrow;
         EventManager.OnThrowEnd -= CoinNormalColor;
+        EventManager.OnCoinStateChanged -= ChangeCoinState;
+        EventManager.OnRestartLevel -= OnPowerUpEnd;
+        EventManager.OnNextLevel -= OnPowerUpEnd;
     }
 }
