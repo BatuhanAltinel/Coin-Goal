@@ -29,6 +29,7 @@ public class PowerUp : MonoBehaviour
             if(GameManager.Instance.PassTheLine && coin.coinState == CoinStates.normal)
             {
                 gameObject.transform.GetChild(0).gameObject.SetActive(false);  
+                gameObject.transform.GetChild(1).gameObject.SetActive(false);
                 GetComponent<SphereCollider>().enabled = false; 
                 EventManager.OnCoinStateChanged.Invoke(CoinStates.powerUp);
             }
@@ -38,6 +39,7 @@ public class PowerUp : MonoBehaviour
     void OnRestart()
     {
         gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        gameObject.transform.GetChild(1).gameObject.SetActive(true);
         GetComponent<SphereCollider>().enabled = true;
     }
 

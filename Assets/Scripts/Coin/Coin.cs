@@ -54,17 +54,19 @@ public class Coin : MonoBehaviour
         if(CoinManager.Instance.PreviousCoin == this)
         {
             this.coinState = coinState;
+
+            switch (coinState)
+            {
+                case CoinStates.powerUp:
+                OnPowerUp();
+                break;
+                case CoinStates.normal:
+                OnPowerUpEnd();
+                break;
+            }
         }
 
-        switch (coinState)
-        {
-            case CoinStates.powerUp:
-            OnPowerUp();
-            break;
-            case CoinStates.normal:
-            OnPowerUpEnd();
-            break;
-        }
+        
             
     }
 
@@ -167,12 +169,8 @@ public class Coin : MonoBehaviour
 
     void OnPowerUpEnd()
     {
-        if(coinState != CoinStates.powerUp)
-        {
-            this._shootPower = _normalPower;
-            this.gameObject.GetComponent<MeshRenderer>().material.color = _normalColor; 
-        }
-        
+        this._shootPower = _normalPower;
+        this.gameObject.GetComponent<MeshRenderer>().material.color = _normalColor; 
     }
 
     
