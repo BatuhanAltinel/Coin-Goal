@@ -1,5 +1,8 @@
 # Coin Goal
  Old triple coin game which i used to play when i was a child. Made by Unity
+## Market
+
+Google Play Store link : [Triple Coin Goal](https://play.google.com/store/apps/details?id=com.LeobGames.TripleCoinGoal)
 ## Images from Gameplay
 
 <image src="https://user-images.githubusercontent.com/17069232/221906153-efb6b349-95bb-4448-9ab5-a64b088abf6a.png" width="250" height="500">
