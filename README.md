@@ -3,6 +3,12 @@
 ## Market
 
 Google Play Store link : [Triple Coin Goal](https://play.google.com/store/apps/details?id=com.LeobGames.TripleCoinGoal)
+## Gameplay Video
+
+
+https://user-images.githubusercontent.com/17069232/228885355-81653286-0693-4fe3-b094-738acd925c49.mp4
+
+
 ## Images from Gameplay
 
 <image src="https://user-images.githubusercontent.com/17069232/221906153-efb6b349-95bb-4448-9ab5-a64b088abf6a.png" width="250" height="500">
